@@ -1,0 +1,1454 @@
+	
+  Anything added here must be first documented.
+
+  Jeyzer Release Notes
+  ---------------------
+
+  3.0 :	- Jeyzer Analyzer :
+			- Analyzer is now open source, under Mozilla Public License 2.0.
+			- Unix open file descriptors support (JEYZ-68)
+			  Open file descriptors are now supported in standard (JZR recordings only, issued from Unix).
+			  The number of open file descriptors and the open file descriptor usage can now be displayed in the sheet headers (see the Charts one).
+			  The open file descriptor usage is a percentage based on the max file descriptors limit (which is user specific. See ulimit -n).
+			  The max file descriptors limit is now also displayed in the property card sheet.
+			- UFO stacks : provide an exclude pattern on small stacks (JEYZ-61)
+			- Recordings can now be provided as gzip only. Previously, gzip recordings had to contain a tar file. (JEYZ-71)
+			- Bug fix JEYZ-59 : JFR - parsing failed on missing jvmStartTime
+			- Bug fix JEYZ-62 : Failed to parse tar files containing directories
+			- Bug fix JEYZ-63 : Jstack and JstackHung parsers could provide invalid lock class names
+			- Bug fix JEYZ-70 : Upon JZR recording analysis, ensure the full isolation of the 2ndary recording files when the analysis translators are configured to keep the intermediate files
+			- Bug fix JEYZ-73 : JZR report generation fails when property card value size exceeds the max cell limit (32767 chars)
+
+		- Jeyzer Monitor :
+			- Monitor is now open source, under Mozilla Public License 2.0.
+			- Shared profile monitoring rule added (JEYZ-72)
+				If the given shared profile is detected, generate the Shared profile event.
+				Recommended usage : deprecated library detection.			
+			- Open file descriptor number monitoring rule added (JEYZ-69)
+				If the number of open file descriptors is larger than a given value, generate the High open file descriptor number event.
+				Valid only on Unix. Applies only on JZR recordings.
+			- Open file descriptor percentage monitoring rule added (JEYZ-69)
+				If the percentage of open file descriptors (based on the max file descriptor limit) is larger than a given value, generate the High open file descriptor usage event.
+				Valid only on Unix. Applies only on JZR recordings.
+			- The max file descriptor limit is now checked through a property card number rule.
+			    Valid only on Unix. Applies only on JZR recordings.
+			- Contention type presence monitoring rule added (JEYZ-64)
+				If the contention type is detected across current session, generate the Contention type presence event.
+			- Quiet activity monitoring rule added (JEYZ-65)
+				If there is no detected action, with the exception of principal functions (ex: JFR background activity) defined with the given pattern, generate the Quiet activity event.
+			- Rule blocker sticker added (JEYZ-66)
+			  This is a new type of stickers which permit to disable a monitoring rule.
+			  It is interesting when overriding standard monitoring rules with more elaborated ones.
+			  One could also disable any standard rule that would not be suitable.
+			  The blocker rule sticker must simply be created by declaring a rule-block-<rule reference> in any sticker list. 
+			  Example : rule-block-JZR-STD-015
+			  To test it, add it to the JEYZER_MONITOR_ANALYZER_STICKERS variable.
+			  To industrialize it, create your own list of stickers in the monitoring configuration and/or related sheets.
+				<sticker_set list="rule-block-JZR-STD-015, rule-block-JZR-STD-019" group="blockers"/>
+
+		- Jeyzer Analyzer Web server :
+			- Security : Tomcat upgrade from 9.0.41 to 9.0.73
+			- Bug fix JEYZ-60 : Upon empty recording file analysis, end user was not getting a relevant error message
+
+  		- Jeyzer Recorder :
+			- Unix open file descriptors support (JEYZ-68)
+			- Bug fix JEYZ-67 : Jeyzer Recorder logging layer conflicted with the Jboss JUL logging manager
+
+		- Jeyzer base repository :
+			- Artemis (AMQ 7) master profile added
+			- Hive Server 2 (HS2) master profile added
+			- IntelliJ master profile added
+			- VMWare VCloud Director master profile added
+			- Adobe shared profile added			
+			- Artemis shared profile added
+			- Byte Buddy shared profile added
+			- ClassGraph shared profile added
+			- Curator shared profile added
+			- Felix shared profile added
+			- Jaeger shared profile added
+			- Jedis shared profile added
+			- Jgit shared profile added
+			- Joda shared profile added
+			- JProfiler shared profile added
+			- Kafka shared profile added
+			- Karaf shared profile added
+			- Kotlinx shared profile added
+			- LMAX shared profile added
+			- Okio shared profile added
+			- Pax web shared profile added
+			- Rabbit MQ shared profile added
+			- Reactor shared profile added
+			- Sling shared profile added
+			- Vert.X shared profile added
+			- ZMQ shared profile added
+			- ZooKeeper shared profile added
+			- Deprecation monitoring rules added in the Protomatter, NanoHTTPD, Lingo, jTDS, Jakarta Oro, JacORB, Joda and Jaeger shared profiles (JEYZ-72)
+
+
+  2.7 :	- Jeyzer Analyzer :
+			- Java 17 LTS support (JEYZ-58)
+			  Certified on the Amazon-correto jdk 17.0.4_8
+			  Tested on Oracle OpenJDK 17.0.2 and Azul 17.0.4.
+			  The Docker distribution of Jeyzer is now running with the Amazon-correto 17 image.
+			- Serial garbage collector support (JEYZ-46)
+			  Serial garbage collector is now supported in standard (JFR and JZR) as it can be used on single processor machines or small VMs/containers.
+			  Limitation : JFR does not provide the associated memory pool figures (unlike the Jeyzer Recorder).
+			- Locker rule priority increased to improve the automatic filtering (JEYZ-52)
+			- The process card sheet now displays the GC old and young names (JEYZ-48)
+			- The Session Info sheet displays now the list of matching shared profiles (JEYZ-55)
+			- The JVM Flags sheet automatically hides the Default flags (JEYZ-56)
+			  The auto_filter_default_flags in the JVM Flags sheet configuration (jvm-flags.xml) permits to disable it :
+			    <origin auto_filter_default_flags="false">
+			- The Top stacks sheet displays now the executor (JEYZ-54)
+			- GC old and young names are now exposed as process card properties : jzr.analysis.gc.old.name and jzr.analysis.gc.young.name (JEYZ-48)
+			- Bug fix JEYZ-43 : Capture time (duration) usage on the JRockit parser was used as a time stamp
+			- Bug fix JEYZ-45 : Menu sheet displayed an invalid counter for the Task sequence group sheet
+			- Bug fix JEYZ-49 : CPU Runnable vs CPU capacity monitoring rule did not manage the JFR CPU count
+			- Bug fix JEYZ-50 : Jrockit parsing failed on variant
+			- Bug fix JEYZ-51 : Invalid zip file error handling improved
+			- Bug fix JEYZ-53 : JFR - thread events can be null
+			- Bug fix JEYZ-57 : JFR - parsing failed on unexpected duplicate JFR thread events. Those duplicate events are now ignored.
+
+		- Jeyzer Analyzer Web server :
+			- Java 17 LTS support (JEYZ-58)
+			- JEYZ-44 : JFR 0.9 version -> emit warning with proper solution proposals when Java 8 (old) or 7 are used
+
+		- Jeyzer Monitor :
+			- Java 17 LTS support (JEYZ-58)
+			- New system monitoring rule : Garbage collector name (JEYZ-47)
+			    If the garbage collector (old or new) has of the given rule name, generate an event.
+			- New standard monitoring rules :
+			    3 rules have been added to detect the serial GC usage (command line parameter, JVM flag and garbage collector type)
+
+  		- Jeyzer Recorder :
+			- Java 17 LTS support (JEYZ-58)
+			- Serial garbage collector support (JEYZ-46)
+
+		- Jeyzer Demos :
+			- Java 17 LTS support (JEYZ-58)
+			- Serial garbage collector support (JEYZ-46)
+			- The Garbage collector name rule is now supported inside the labor demo (JEYZ-47)
+
+		- Jeyzer base repository :
+			- Apache HTTP client shared profile added
+			- Apache HTTP core shared profile added
+			- Apache openejb shared profile added
+			- AWS shared profile added
+			- Azure shared profile added
+			- Bouncy castle shared profile added
+			- Eclipse shared profile added
+			- GraalVM shared profile added
+			- IntelliJ shared profile added
+			- Jackson shared profile added
+			- Jodd-HTTP shared profile added
+			- Latency utils shared profile added
+			- Log4j rules added (CVE-2021-44228 detection)
+			- MongoDB shared profile added
+			- MSSQL shared profile added
+			- Pulsar shared profile added
+			- Qpid shared profile added
+			- Quarkus shared profile added
+			- Synapse shared profile added
+
+  2.6 :	- Jeyzer Analyzer :
+			- Automatic loading of master profiles (JEYZ-39)
+			  This new functionality permits to dynamically load a master profile based on a remarkable pattern found in the recording.
+			  In practice, the analysis is started using the generic profile in the Jeyzer Web Analyzer 
+			    and will end up by generating the JZR report using the right applicative profile.
+			  This new functionality is possible thanks to the profile redirection mechanism : a generic profile (such as Portal) will usually provide the profile redirection 
+			    while the applicative profiles (ex : AMQ) will provide one or several remarkable patterns.
+			  Those remarkable patterns are typically application package or class unique names (ex for AMQ : org.apache.activemq.console.Main).
+			  The master profile redirection is optional. If not defined, the current master profile cannot participate in a profile redirection process.
+			  The master profile redirection is only supported by the Jeyzer Web Analyzer. 
+			  The JZR Session details sheet indicates if the profile redirection occured by providing the initial generic profile name and final applicative profile name.
+			  To support the profile redirection mechanism, add the following entry in the <profile>_analysis.xml in your generic profile :
+			    <analysis>
+				  <discovery>
+				    <profile_redirection enabled="true">
+			  To declare the remarkable patterns of an application, add the following entry in the <profile>_analysis.xml in your applicative profile :
+			    <analysis>
+				  <discovery>
+				    <profile_redirection>
+					  <id_patterns>
+					     <id_pattern value="org.my_application"/>
+			  As part of this implementation, the existing discovery mode has been renamed as discovery rules and moved within the discovery configuration section :
+			  	  <analysis>
+				    <discovery>
+					  <discovery_rules enabled="true"/>
+			  The discovery_mode section is however still supported as part of the backward compatibility.
+			- JZR report : group sequence sheet (JEYZ-38)
+			  The group sequence sheet focuses on similar stacks and is therefore very useful when dealing with large multi-threaded/asynchronous based applications.
+			  Each group of similar stacks will have its own cell in the report for a given recording snapshot. 
+			  When a group is observed on consecutive recording snapshots, the related cells get displayed on the same line : it constitutes a group action.
+			  The group sequence sheet is a new type of sheet inspired from the sequence sheet and therefore follows the same configuration structure.
+			  To display it, add the <sheet sheet_config_file="${JEYZER_ANALYZER_CONFIG_DIR}/report/sheet/group-sequence/group-sequence-stack-groups.xml"/> in your JZR report configuration.
+			  To accomodate the display, new row headers and cell attributes have been created :
+			    Row header
+				  group_id    : displays the group action id.
+				  group_size  : displays the total number of stacks within the group action.
+				Cell attribute
+				  group_size : displays the stack group size. Example : x25
+			  Group sequence sheets do not support freeze, CPU, memory and MX attributes as those do not make sense.
+			- JFR analysis support extended (JEYZ-31)
+				JFR can now be provided as zip file.
+			- Analysis stack ordering support (JEYZ-36)
+			  It is now possible to sort the stacks in the analysis by thread name, thread id or recording appearance (original behavior).
+			  The sorting key (thread_name, thread_id or recording) can be specified in the analysis profile (<profile>_analysis.xml) :
+			    <thread_stack>
+				  <sorting key="thread_name"/>
+			  If not available, the sorting key is defined in the default setup (default_setup.xml) which is thread_id.
+			- The Task sequence lock_state cell rule is now displaying the class name on which the lock is put on. (JEYZ-33)
+			  It is appended at the end of the lock information, in lower font size.
+			- Instana file analysis support (JEYZ-32)
+			- Bug fix JEYZ-35 : Task sequence default sorting was done in reverse order
+			- Bug fix JEYZ-40 : JZR recording parsing failed when the analysis profile contains a txt file regex pattern
+			- Bug fix JEYZ-41 : Failed to generate the Action distinct profiling sheet due to comparison violation error
+			- Bug fix JEYZ-42 : The daylight saving time was incorrectly handled in the monitoring event time display
+
+		- Jeyzer Monitor :
+			- New system monitoring rule : Recording size
+			    If the number of recording snapshots (thread dumps) is larger or lower than the specified threshold, generate an event. (JEYZ-34)
+				A default standard rule has been added to emit an info message to recommend going for a proper periodic recording instead of single thread dump.
+			- New standard monitoring rule stickers :
+			    Environment : Java agent presence, windows service, debugging in progress..
+				Analysis : recording size..
+
+		- Jeyzer Analyzer Web server :
+			- Automatic loading of master profiles (JEYZ-39, see Jeyzer Analyzer).
+			  The profile redirection applies on the master profile repositories accessed by the Jeyzer Analyzer Web server, 
+			    assuming those master profiles are configured correctly.
+			- Improve the end user notification when recording contains no parseable files (JEYZ-37)
+			  Make the notification as a warning instead of error, and list the supported file formats.
+
+		- Jeyzer Demos :
+			- The Demo features MX provides now remarkable patterns for the profile redirection (JEYZ-39)
+			- The Recording size monitoring rule is now supported inside the demos (JEYZ-34)
+
+		- Jeyzer base repository :
+		    - Automatic loading of master profiles (JEYZ-39) :
+			    - The Portal generic profile supports the profile redirection.
+				- All base production master profiles do provide now remarkable patterns for the profile redirection.
+			- Daml master profile added
+			- Hybris (SAP product) master profile added
+			- Postgresql shared profile added
+			- Logback shared profile added
+			- Instana (Java agent) shared profile added
+			- Tanuki shared profile added
+
+		Upgrade instructions : 
+			- Optional : update the <application>_analysis.xml file of your generic master profiles to add the profile redirection (as indicated above).
+			    Verification : generate a JZR report, in the Session info / Analysis section, check that the Master profile discovery field is set to active.
+			- Optional : update the <application>_analysis.xml file of your application master profiles to add the remarkable patterns (as indicated above).
+			    Verification : generate a JZR report using a master profile configured for the profile redirection (like the Portal one). 
+				   In the Session info, check that the Redirected master profile field is set with the application master profile.
+			- Optional : update all the <application>_analysis.xml files to handle the discovery mode configuration declaration change (as indicated above).
+			- Optional : add the group sequence sheet to your JZR report definitions (as indicated above).
+				Verification : generate a JZR report and check that the Stack groups sheet is now available.
+
+  2.5 :	- Jeyzer Analyzer :
+			- Display time zone support
+				JZR report and all other communication media (JIRA, email, loggers and web) allow to display the time stamps in a time zone different from the recording one.
+				This is particularly useful to correlate the detected events with applicative logs or end user feedbacks which are based on another time zone.
+				This is also interesting with Java Flight Recordings as those are always in UTC time (although Jeyzer can use - through configuration - the process or a custom time zone as an alternative. See below).
+				The display time zone can be specified through the Jeyzer Web Analyzer interface (see hereafter) when generating the JZR report and through the analysis profile configuration.
+				In the JZR report, the time zone source will then be set respectively with either "user selected" or "profile". 
+				If not specified, the recording time zone is taken if available (which is always the case for the JFR and JZR recordings) : time zone source will remain the recording one.
+				If the recording time zone is not available, the local time zone is taken.
+				The display time zone in the profile configuration is defined in the <application>_analysis.xml file :
+					<time_zones>
+						<!-- Drives the date display in reports and other outputs. Optional -->
+						<display_time_zone   id="${JEYZER_DISPLAY_TIME_ZONE_ID}"/>
+				Time zones ids are Java ones (see bottom note).
+  			- JVM flags analysis support
+			    JZR report - the JVM Flags sheet lists all the JVM flag attributes : name, value, previous value, change date, origin (Default, Command line..) and type.
+				    Every field can be filtered. Lines which have a non default origin are highlighted.
+				    To display it, add the <sheet sheet_config_file="${JEYZER_ANALYZER_CONFIG_DIR}/report/sheet/jvm-flags/jvm-flags.xml"/> in your JZR report configuration.
+				    The JVM Flags sheet will be displayed only if the recording (JZR or JFR) contains the JVM flags information.
+				JVM flag monitoring
+				    Monitoring rules can be applied over the JVM flags to detect some specific value/pattern, compare numeric values or detect the absence of a flag.
+					Those rules are the process card ones : Process card property pattern, Process card property number and Process card property absence.
+					The JVM flag to monitor must be prefixed with "jzr.jdk.flag.".  Example : jzr.jdk.flag.HeapDumpBeforeFullGC
+					Every Jeyzer analysis now includes a default set of JVM flag rules stored in the ${JEYZER_ANALYZER_CONFIG_DIR}/monitor/rules/jvm_flag_rules.xml
+			- JFR analysis support extended
+				Analysis time zone is now flexible.
+					It can be either one of these sources : 
+						Process : the time zone will be issued from the user.timezone (if available in the JFR recording) 
+						JFR : the time zone will be UTC which is the JFR standard one
+						Custom : the time zone will be the one defined by configuration (custom attribute) which is a Java time zone id (see bottom note).
+					By default, the process source is selected.
+					If the time zone is not found or invalid, the analysis will default on the JFR one.
+					As a consequence the JZR report will display the time zone source as "process" or "JFR" or "Custom".
+					The time zone configuration is defined in the jfr_uncompress.xml file :
+					    <time_zone source="process" custom="EST"/>
+				JVM flags information is now parsed and analyzed.
+				Openjdk 8 is now supported. Minimum version is 8u282+
+			- Recording time zone specification
+				When not available in th recording (typically when analysing a set of thread dumps), the recording time zone can be defaulted through the Jeyzer Web Analyzer interface (see hereafter) when generating the JZR report and through the analysis profile configuration.
+				The recording time zone in the profile configuration is defined in the <application>_analysis.xml file :
+					<time_zones>
+						<!-- Default recording time zone if not available in the recording. Optional -->
+						<recording_time_zone id="${JEYZER_RECORDING_TIME_ZONE_ID}"/>
+				Time zones ids are Java ones (see bottom note). 
+				The recording time zone source will be set to "profile".
+			- The Session Details is now listing the display and recording time zones and sources, as well as the start and end date in both time zones.
+			- TDA file analysis support (files suffixed with .tda containing only stacks in a jstack 1.5 style)
+			- The Task sequence and Monitoring Task Sequence display the thread activity on larger columns in case of small recordings.
+			- Bug fix JEYZ-22 : Add recording extension check based on the supported translator extensions
+			- Bug fix JEYZ-23 : JFR support - recording time zone is taking the Jeyzer analyzer's one instead of UTC (JFR standard)
+			- Bug fix JEYZ-24 : JZR report - monitoring event times could be displayed using the analyzer time zone instead of the JZR or JFR recording one
+			- Bug fix JEYZ-28 : Jeyzer Analyzer failed to parse thread names larger than 2000 chars
+			- Bug fix JEYZ-29 : Jeyzer Analyzer failed to parse consecutive thread names (Jstack exotic case)
+			- Bug fix JEYZ-30 : Jeyzer Analyzer failed to generate JZR reports with long sheet names
+  
+		- Jeyzer Analyzer Web server :
+			- Display time zone support
+				The web interface permits now to choose the display and recording time zones.
+				It is possible by de-selecting the "Time zone - automatic detection" check box.
+				Time zone selection is allowed once the recording gets loaded.
+				The recording time zone selection is possible only if that one is not found in the recording. 
+				The list of time zones is a representative sub set of the Java time zone ids (see bottom note).
+				The recording and display time zones defined in the selected profile will serve as default values when the time zone is not chosen or cannot be deduced.
+				If the "Time zone - automatic detection" is checked, the analyzer will attempt to deduce the time zones, otherwise use the default ones if any.
+				The time zone widgets can be disabled through the JEYZER_WEB_PORTAL_TIME_ZONE_DISPLAY environment variable by setting it to false : in such case, the above automatic detection strategy will apply.
+			- Bug fix JEYZ-25 : the start and end date of the JZR report link were not converted to the recording time zone
+  
+  		- Jeyzer Recorder :
+			- Bug fix JEYZ-26 : JZR recording snapshot generation failed when an invalid time zone is specified on the monitored process command line
+			- Bug fix JEYZ-27 : Jeyzer Recorder could use invalid time zone id in the snapshot file time stamps
+
+		- Jeyzer Demos :
+			- Time zone is now covered inside the demos :
+				Demo features is started in the US/Pacific time zone. Recording time zone is set with this value.
+				The demo-features-mx profile is configured to display it in the US/Central time zone.
+				Demo labors is started in the GMT time zone. Recording time zone is set with this value.
+				The demo-labors profile is configured to display it in the IST time zone (Indian Standard Time).
+			- JVM flags are now covered inside the demos :
+			    Demo features is setting the HeapDumpPath diagnosis flag : new value is visible in the JVM flags sheet.
+				Demo Labors is setting the HeapDumpPath diagnosis flag and checks it through a dedicated monioring rule.
+  
+		- Jeyzer base repository :
+			- Jenkins master profile added
+			- Jnr-ffi shared profile added
+			
+		- Notes : 
+			- Time zone ids
+				In Jeyzer, the time zones ids are the Java ones which are originally issued from the tz database.
+				Official tz list is available at https://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+				Important : the Etc/GMT+2 is not GMT+2, but GMT-2 as per definition : in the "Etc" area, zones west of GMT have indeed a positive sign.
+
+
+  2.4 :	- Jeyzer Community license updated :
+			- Jeyzer is now released under the Jeyzer Community License Agreement Version 1.2
+			  What has changed : Jeyzer Monitor is now under trial period : until end of May for the current release.
+			  After this date, the JZR reports generated by the Jeyzer Monitor will be empty.
+			  The Jeyzer Analyzer is not affected and remains a free solution.
+			  
+		- Jeyzer Analyzer :
+			- JFR analysis support
+			  Jeyzer Analyzer can now analyse JFR recordings through an extra Jeyzer translator. 
+			  Prerequisites : 
+			   - JFR recordings must be made with Java 11+.
+			   - Jeyzer Analyzer must run under Java 11+.
+			   - JFR recordings should be generated using the JFC configuration provided within any Jeyzer installation.
+			     See the associated README file for more details about the JFR usage within your environment.
+			  By default the JFR translator is now active in the Jeyzer portal, template  and demo profiles.
+			  To benefit from it on an existing profile (issued from Jeyzer 2.3 or below), add this line in the <application>_analysis.xml file :
+				<translator type="jfr" translator_config_file="${JEYZER_ANALYZER_CONFIG_DIR}/translators/jfr/jfr_uncompress.xml"/>
+			  under the compression translator declaration.
+			  The translator will convert ("uncompress") the JFR events into JZR snapshots. 
+			  Once uncompressed, those will be processed by the other Jeyzer translators, such as the de-obfuscation one.
+			  The jfr_uncompress.xml defines the JFR analysis Jeyzer settings. Duplicate it if required for customization needs.
+			    The JZR snapshots resulting from the conversion are stored in the jfr_uncompressed directory. 
+			    You may keep it for control purposes by setting the keep_files parameter in the jfr_uncompress.xml :
+			      <jfr_uncompress keep_files="true" directory="${JEYZER_RECORD_DIRECTORY}/jfr_uncompressed">
+			    For control purposes, the JFR events can be dump into distinct text files (per_type) and/or globally (all) through the dump_events settings :
+			      <dump_events per_type="true" all="false" directory="${JEYZER_RECORD_DIRECTORY}/jfr_dump"/>
+			- JRockit Mission Control recording format is now supported.
+			- Jstack 1.5 format variant support (assumed JDK 11 performing Jstack over old JDK)
+			- Stack size interest strategy (meaning automatic filtering of useless stacks) constraint has been relaxed and made more configurable.
+			  The percentage of sample quiet stacks (meaning mostly waiting/sleeping) required to allow this strategy is now configurable (it was previously hard coded to 5%).
+			     Example (sample_app_analysis.xml) : <scan_coverage snapshot_samples="10" snapshot_sample_percentage="30"
+		      Default value is 5 if the snapshot_sample_percentage attribute is missing.
+			- JZR report - the Session Details sheet now includes the Jeyzer Recorder logging details and the Jeyzer agent version.
+			- Process card monitoring rules : Jeyzer logging monitoring rules added for debugging active, console active.
+			- Lock relationship support added on jstack 1.5 format
+			- Bug fix JEYZ-14 : Sheet formats were only applying on the task sequence sheets. Now extented to all sheets (as per the original documentation)
+			- Bug fix JEYZ-16 : Prevent false positive file delete warning on multiple deobfuscations
+			- Bug fix JEYZ-17 : Strip code line failed on Java 11 Ubuntu stack
+			- Bug fix JEYZ-18 : Jstack 1.5 file pattern relaxed
+			- Bug fix JEYZ-19 : Display of large stacks could fail under certain conditions
+			- Bug fix JEYZ-20 : Deadlock cycle detection failed on thread dumps issued from JMX
+
+		- Jeyzer Analyzer Web server :
+			- JFR format support
+			  The JFR maximum file size is 100Mb. Change it through the JEYZER_WEB_UPLOAD_RECORDING_MAX_SIZE environment variable (affects also the zip/tar.gz files).
+			- Error message display improved.
+			- Bug fix JEYZ-15 : analysis failed when the Report id input field did contain a start or end space.
+
+		- Jeyzer Recorder :
+		    - The Jeyzer Recorder Agent is now deployed and integrated within a scaling recording and configuration structure (internal or external), 
+			  meaning it is adapted for the monitoring support of multiple Java applications.
+			  Once installed, the agent is immediately usable by adding this parameter to the monitored application command line : 
+			   -javaagent:"<Jeyzer home>/recorder/lib/jeyzer-agent.jar"=<Jeyzer home>/recorder/config/agent/jeyzer-agent.xml;jeyzer-record-agent-profile=<app name>
+			  Adding extra applications in this scaling structure has been simplified (5 mn effort) : see the README-AGENT.xml for the setup instructions.
+		    - The Jeyzer Recorder now support default paths for the configuration repository and recording home.
+			  It is still possible to override it using the JEYZER_RECORD_APP_CONFIG_REPOSITORY and JEYZER_RECORD_APP_RECORDING_HOME environment variables or system properties.
+		    - The Jeyzer Recorder now support a default recording agent profile.
+			  It is still possible to override it using the JEYZER_RECORD_AGENT_PROFILE or to specify it on the -javaagent parameter (as above).
+			- Logging framework has been made fully independant and neutral : Logback has been replaced by the Java Util Logging (JUL).
+			  The logging configuration is Jeyzer specific and therefore cannot interfere with any external logging configuration.
+			  Log file path is now determined dynamically (no need to set it anymore).
+			  Upon change, log configuration can be reloaded at runtime. Disabled by default.
+			  Log file and log configuration paths can be overriden through environment variables ot through -D start parameters.
+			  See the Recorder README.txt for more details.
+			- Bug fix JEYZ-12 : Jeyzer Recorder failed to load its configuration on JDK 8 when Apache Xerces is on the classpath
+			- Bug fix JEYZ-13 : Regain Java 7 compatibility
+			
+		- Jeyzer Recorder Agent :
+		    The agent parameter support and the variable default value support permit to instantiate directly the agent,
+			while staying compatible with any environment variable or system property declaration. 
+			- Agent parameters support 
+			  These parameters can be referenced by the agent variables.
+			  Variable resolution is performed in this order : internal agent variable, agent parameter (new), system property, environment variable
+			  Parameters are specified at the end of the Java agent argument, separated by a semicolumn.
+			   Example : -javaagent:"<agent jar path>"<jeyzer-agent.xml path>;param_key1=param_value1;param_key2=param_value2[...]
+			- Variable default value support. Optional
+			  If the system property or environment variable contained in the variable value cannot be resolved, the agent variable will be set 
+			  with the default value and the unresolved variable will be set as a system property.
+			  Example : <variable name="jeyzer-agent-home" default="C:\jeyzer-recordings">${JEYZER_RECORD_APP_RECORDING_HOME}</variable>
+				   The jeyzer-agent-home agent variable and the JEYZER_RECORD_APP_RECORDING_HOME system property will be set with "C:\jeyzer-recordings"
+				   assuming JEYZER_RECORD_APP_RECORDING_HOME would not be set previously as system property or environment variable.
+			  System property and environment variable can be specified (and will be resolved). Inner variable resolution is however not supported.
+			- Agent bootstrap logging
+			  Boot traces will appear in the console. Disabled by default.
+			  Add the -Djeyzer.agent.boot.debug=true on the command line to activate it.
+			- Jeyzer agent version is now exposed as a system property (and recorded by the Jeyzer Agent)
+
+		- Jeyzer Installers :
+			- The Jeyzer Recorder configuration repository path is now configurable when the Jeyzer Recorder Agent is selected.
+			
+		- Jeyzer Demos :
+			- Jeyzer demos do now also generate a JFR recording.
+			  It is available in the <recording home directory>/<demo profile>/jfr directory.
+			  It uses the customized JFC configuration jeyzer-demo.jfc file available in the <demo home>/config/jfr directory.
+			  The thread dump period is set to 5 seconds (like for the JZR recording).
+			  
+		Upgrade instructions : update the <application>_analysis.xml file of your profiles to add the JFR translator (as indicated above).
+
+  2.3 :	- Jeyzer Analyzer :
+			- Memory pool header is now able to display one of several memory pools.
+			  Category syntax allows now to support multiple memory pools separated by "|" .
+			   		Example : <memory_pool category="PS Old Gen|G1 Old Gen:peak:used" display="Old Gen Peak" 
+			  This permits to get profiles independant from the JVM memory model which is JDK version dependant in standard (PS Old Gen and G1 apply respectively by default on JDK 8 and JDK 11).
+			  As a consequence, the chart serie names are now referring to the display name (lower case, with dashes) instead of the category. 
+			        Example : <serie header="memory_pool-old-gen-peak"/>
+			- JZR report - The Monitoring Rules sheets can now display the rules based on :
+			    - the rule reference : each rule is listed only once (new).
+				  This is now the default if not configured.
+				  Sheets using the rule get listed, with a link access for each.
+				    Example (monitoring-rules.xml) :  <display list_key="rule_ref"/>
+				- the sheet : each rule can appear several times, once per sheet (Jeyzer 2.2 and previous versions)
+			        Example (monitoring-rules-per-sheet.xml) :  <display list_key="sheet"/>
+			- JZR report - The Profiling and Top stack sheets can strip the Java module prefixes on the code lines to gain in readability. 
+			  It is stripped by default, except in the ATBI profiling sheet.
+			        Example (top-stacks.xml) : <java_modules strip="true"/>
+			- Deobfuscation : locks are now deobfuscated thanks to the Retrace-alt library upgrade to 1.1.3.
+			- Stickers : security ambiant sticker added. Enabled in standard
+			- Process card monitoring rules : Java release version, 2 JFR and 2 JMX parameters monitoring rules added
+			- Security : Tomcat upgrade from 9.0.30 to 9.0.41
+			- Bug fix JEYZ-11 : JZR report GC figures with G1 were invalid due to max not set on G1 young
+			- Bug fix JEYZ-10 : JZR report heap percentage figure with G1 was invalid due to max not set on G1 young
+			- Bug fix JEYZ-9 : Duplicate file check was considering the recording descriptor files
+			- Bug fix JEYZ-8 : Java module detection failed on JFR stacks (empty stack case)
+			
+		- Jeyzer Recorder :
+			- Jeyzer recorder configuration now support multiple GC configurations.
+			
+		- Jeyzer Demos :
+			- Jeyzer demo recorder configuration now support multiple GC configurations.
+			
+		Upgrade instructions : update the chart serie names that apply on memory pools.
+
+  2.2 :	- Jeyzer Analyzer :
+  			- Java module support in the analysis.
+			  Prerequisite : the JZR recording must include the process-modules.txt file.
+			  Features :
+			    - New JZR report sheet : Modules 
+				  The sheet displays each Java module with its name, version, open, automatic, requires, exposes, uses, provides and class loader.
+				  The sheet can include a graph of the modules : modules get dependency linked and each one shows its number of outgoing dependencies. 
+				  Module graph display is css based and defined in the ${JEYZER_ANALYZER_CONFIG_DIR}/graph/static/style_modules.css
+				- Deobfuscation configurations can refer to module versions with the ## prefix and suffix. Example : ##org.jeyzer.demo##
+				- JIRA configurations and templates can refer to module versions with the ## prefix and suffix tokens. Example : ##org.jeyzer.demo##
+				- Shared profile dynamic loading has been extended to rely also on the Java module name and version : if Maven is used, those will correspond to the artefact id and version of the Maven project.
+			      Loading is performed in the process module declaration order, always after the static ones and process jar path resolutions.
+				  As Java modules do not carry external information (like a Jeyzer profile repository id), all profile repositories get therefore scanned.
+			- Java module support in the deobfuscation : migration to retrace-alt 1.1.2
+ 			- JZR report - Task sequence : long stack display rule added. Cell text size gets increased if the stack size is larger than a threshold.
+			  Scope reduction to ATBI only is possible. This is a good alternative to the atbi_of_interest display rule (which is color based).
+			  Provided in the new Task sequence focus JZR sheet, loaded by the Portal master profile.
+			- Mac zip file support
+			- Bug fix JEYZ-7 : Jeyzer Analyzer on Windows failed to process Jstack thread dumps with time stamps containing column char in archive files.
+			- Bug fix JEYZ-6 : Jeyzer Analyzer failed to process tar.gz recordings containing directories.
+			- Bug fix JEYZ-5 : Task memory diff could be zero when task cumulative memory was higher than total consumed memory
+			
+		- Jeyzer Analyzer Web server
+            - Issue description default value is now configurable through the JEYZER_WEB_DEFAULT_ISSUE_DESCRIPTION environment variable.
+			  If not provided, it is set to some default text.
+			- Bug fix JEYZ-4 : Jeyzer Web Analyzer used the application_type to set the JEYZER_TARGET_PROFILE variable instead of the profile directory name.
+			
+		- Jeyzer Monitor :
+			- New advanced monitoring rules introduced by the Java module support :
+				- Process module name absence. If no Java module name is matching the given pattern, generate event.
+				- Process module name. If a Java module name is matching the given pattern, generate event.
+				- Process module version absence. If one or more Java modules do not have any version, generate event.
+				- Process module version. If the rule sticker(s) is/are matched, generate event. This rule must get associated to at least one process module version sticker. It has no check body and relies only on the stickers.
+				  Rule is similar to the sticker match rule.
+				- Process module version snapshot. If one or more Java modules are snapshot modules (or any module having any alphabetic character as part of their version), generate event.
+			- Stickers can now also be matched against a Java module version
+				Below example would match any logback-classic Java module with a 1.0.x version :
+					<sticker name="logback-1.0.x" type="process module version" module_name="logback-classic" pattern="^1\.0\.*"/>
+			
+		- Jeyzer Publisher :
+			- Jeyzer Publisher library is now released as a Java module named "org.jeyzer.publish". It stays compatible with JDK 7 and 8.
+			
+		- Jeyzer Annotations (v2.1) :
+			- Jeyzer Annotations library is now released as a Java module named "org.jeyzer.annotations". It stays compatible with JDK 7 and 8.
+			  Only used at compilation time, it has to be imported as a static module.
+
+		- Jeyzer Recorder :
+			- Modules recording support. Java modules are printed in the process-modules.txt which ends up in the JZR recording. Optional and active only on Java9+.
+			
+		- Jeyzer Ecosystem :
+			- Azul Zulu JVM 8 and 11 support
+			
+		- Jeyzer Demos :
+			- Jeyzer demos are now released as a Java modules to demonstrate the module features in the JZR report and monitoring rules. Demos stay compatible with JDK 7 and 8.
+			- The Jeyzer Labors now include 5 extra test scenarios related to the new module monitoring rules.
+			- Bug fix JEYZ-3 : sh scripts failed to load the Jeyzer agent.
+			- Bug fix JEYZ-2 : demo log file was created in an invalid directory.
+
+  2.1 :	- Jeyzer Monitor :
+			- JIRA Cloud integration through the JIRA REST v3 API.
+			  Jeyzer Monitor will create or update JIRA items for the important encountered monitoring events :
+			    - If the event is issued from a monitoring rule without a JIRA ticket, a JIRA item is created. The generated JZR report gets attached to it.
+			    - If the event is issued from a monitoring rule with a JIRA ticket, the related JIRA item is updated with a comment and possibly the generated JZR report (optional).
+			  Each Jeyzer master profile should be associated with one JIRA project and possibly one of its Components.
+			  Published information on JIRA includes : 
+				- Monitoring event details : name, recommended action, priority.. 
+				- JZR report
+				- Contextual information : process card values, process jar versions
+			  When an event is encountered multiple times, only one JIRA item gets generated/updated. 
+			    The number of similar events is then included in the JIRA item description/comment.
+			  JIRA publishing occurs at the end of any scanning phase and will apply to any new event matching the defined thresholds (see hereafter).
+			  The JIRA publishing functionality is activated within the Jeyzer master profile publishers section :
+			      Example : <jira jira_config_file="${JEYZER_DEMO_MASTER_PROFILES_DIR}/${JEYZER_TARGET_PROFILE}/monitor/publishers/jira/jira.xml"/>
+			  If the JIRA item is not created or updated, activate the JIRA client debug traces (see hereafter) and check the Jeyzer Monitor log. 
+			  2 JIRA configurations sets are provided :
+				- JIRA project configuration
+				  It defines the JIRA project, the JIRA Component, the event thresholds, the create/update action configurations and the JIRA priority mappings.
+				  The event thresholds permit for example to publish only the highly critical ones.
+				  The create action includes the following fields : 
+				    - JIRA summary : templatized
+					- JIRA description : templatized
+				    - JIRA affect version. Mandatory. It is recommended to set it with the process jar version of the current application
+					- JIRA assignee. Optional. Default is the JIRA connection user.
+				        If specified, it must be the end user email or the account id of the JIRA user
+					- JIRA priority. Optional
+					    JIRA priority mappings permit to map the event level and sub level to a JIRA priority (ex: C10 to Highest). 
+				        If the mapping is not defined, the default JIRA priority will apply.
+					- JIRA component. Optional. Can be set with the profile name for example, or hardcoded.
+					- JIRA environment. Optional.
+				  Configuration file is stored within the master profile in the monitor/publishers/jira/jira.xml file.
+				- JIRA connectivity setup : it contains the JIRA URL and the basic header key. 
+				  The debug setting permits to generate the REST traces in the Jeyzer Monitor log file.
+				  Configuration file is : ${JEYZER_ANALYZER_CONFIG_DIR}/monitor/publishers/jira/jira_setup.xml
+			  JIRA configurations and templates can refer to property card values with the @@ prefix and suffix tokens. Example : @@jzr.profile.name@@
+			  JIRA configurations and templates can refer to process jar versions with the %% prefix and suffix tokens. Example : %%jeyzer-demo%%
+			- Monitoring rules do now provide an optional ticket field to store any ticket system reference (like a JIRA id). 
+			  Ticket value is used as part of the above JIRA integration to update existing JIRA tickets.
+			  Tickets are displayed in the Monitoring Rules sheet.
+			  Note that the Jeyzer Publisher permits to set the JIRA ticket on the applicative events : this is particularly useful 
+			    in investigation cases or to handle specific situations.
+			- Bug fix JEYZ-1 : Monitor failed when stickers configuration was not set
+
+		- Jeyzer Analyzer Web server
+            - Email submitter default value is now configurable through the JEYZER_WEB_DEFAULT_SUBMITTER_EMAIL environment variable.
+			  If not provided, it is set to optional-email@domain.com. Set it to an invalid email value (without @) to force people entering it.
+
+		- Jeyzer Analyzer :
+			- The JZR report has been enhanced with a better cell comment display : comments get sized proportionally to their content.
+			- Stacks are now displayed without empty Jzr fields in the JZR reports : improves the readability.
+			
+		- Jeyzer Demos :
+			- Master demo profiles moved to the Github demo repository.
+			- Labors and Features projects do include a JIRA configuration. 
+			  You just need to update its configuration to connect it to your own JIRA Cloud instance.
+			  The JIRA authentication key generation is described here :https://developer.atlassian.com/cloud/jira/platform/basic-auth-for-rest-apis
+			- The Features project theme is now aircraft related.
+
+  2.0 :	- Jeyzer Analyzer Web server
+            - Report protection password is now supported when specified at profile or global setup.
+              Password mode must be set as External mandatory or External optional. 
+              Otherwise it is either not set or internally enforced.
+  			- Function auto discovery is now supported. 
+  			  It applies best for the Discovery profile.
+  			  User captures key words which will be set on the JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_[1-5] internal variables.
+  			  Function auto discovery will apply if following conditions are full filled :  
+  			  - Auto discovery is allowed by the master profile 
+  			  - Following discovery function pattern is available in the selected profile : 
+  			  	<discovery_function pattern="${JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_[1-5]}" focus="both"/>
+  			  User selects the color - through a color picker popup window - to set the display color of the discovered functions.
+  			  Color will be set on the JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_COLOR internal variable.
+  			  As soon as the following discovery highlight is available in the selected profile : 
+  			  	<highlight regex="${BUILT_JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_REGEX_[1-5]}" color="${JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_COLOR_[1-5]}"/>
+  			  the discovered functions will be highlighted.
+  			  Note that the BUILT_JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_REGEX_[1-5] variable content is built dynamically 
+  			  based on the JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_[1-5] variable content.
+  			  Function auto discovery can be disabled through the JEYZER_WEB_DISPLAY_FUNCTION_DISCOVERY environment variable by setting it to false.
+  			- Number of concurrent analysis is now configurable through the JEYZER_WEB_ANALYZER_THREAD_POOL_SIZE environment variable. Default is 3.
+  			  Number of concurrent analysis should be set considering the available memory allocated to Tomcat (Xmx) 
+  			  and the amount of memory requested for the largest report (where profile complexity and recording size are in play).
+  			  When the limit of concurrent analysis is reached, the analysis is put on hold and the "Waiting for analysis slot" message is displayed to the end user.
+  			  Note that the uploaded recording may expire during that time, which will force the user to re-load it again.
+  			- JZR recording size limit is now configurable through the JEYZER_WEB_UPLOAD_RECORDING_MAX_SIZE environment variable. 
+  			  Default is 100Mb in standard and 10Mb in portal mode. Unit is Mb.
+  			- Uncompressed content size limit of the uploaded JZR recording is now configurable through the JEYZER_WEB_UPLOAD_RECORDING_UNCOMPRESSED_MAX_SIZE environment variable.
+  			  Default is 1500Mb in standard and 150Mb in portal mode. Unit is Mb.
+    		- Maximum number of uncompressed files extracted from the uploaded JZR recording is now configurable through the JEYZER_WEB_UPLOAD_RECORDING_UNCOMPRESSED_MAX_FILES environment variable.
+  			  Default is 2882 (24 hours of recording with a period of 30 seconds) in standard and 362 (6 hours of recording with a period of 30 seconds) in portal mode.
+  			- UFO stack file link display is now configurable through the JEYZER_WEB_DISPLAY_UFO_STACK_FILE_LINK environment variable. Default is false.
+  			- Recordings are uploaded in a temporary directory, while waiting to be analyzed.
+  			  Recording upload directory is configurable through the JEYZER_WEB_TEMP_UPLOAD_DIRECTORY environment variable.
+  			  In a Jeyzer installation, the recording upload directory is created inside the <Jeyzer installation>/work/web/upload directory.
+  			  Otherwise, files get uploaded by default in the ${java.io.tmpdir}/Jeyzer-tds directory.
+   			  Uploaded recordings have a default life time of 5 minutes : if not analyzed in this time lapse, the recording gets automatically removed.
+  			  Recording life time can be set through the JEYZER_WEB_TEMP_UPLOAD_RECORDING_MAX_RETENTION_TIME environment variable (JEYZER_WEB_TEMP_UPLOAD_RECORDING_MAX_RETENTION_TIME=5m).
+  			- Report links get now displayed with a monitor event level color indicator (red = critical, orange = warning, blue = info, green = nothing).
+  			- Vaadin 13 support
+  			- Generated JZR report is now displayed with colorized icon which indicates the level of criticality : red/orange/blue image if respectively some critical/warning/info event is found in the analysis.
+  			  This feature is available if the master profile is in production state.
+  			- Each analysis gets assigned a unique id. Example : 36db612-101
+  			  This request id is logged, used as a recording file prefix and becomes finally the report id.
+  			  In case of error, it is displayed to the end user to facilitate any troubleshooting.
+  			- Jeyzer Analyzer Web server can be embedded in a portal. In such case, some extra configuration may be required :
+  				Title display : the "Jeyzer report generator" title can be hidden through the JEYZER_WEB_PORTAL_TITLE_DISPLAY environment variable.
+  				Profiles display : the list of profiles can be disabled through the JEYZER_WEB_PORTAL_PROFILES_DISPLAY environment variable.
+  				   If disabled, the default profile will be the one set through JEYZER_ANALYZER_DEFAULT_PROFILE environment variable. 
+  				   Usually set to "Portal" or "Discovery" (default one if environment variable is not set).
+  				   Profile automatic selection (based on recording file name) still remains active.
+  				Period fields display : the automatic period detection checkbox (and related period field) can be disabled through the JEYZER_WEB_PORTAL_PERIOD_DISPLAY environment variable.
+  				   If disabled, the automatic period detection will be activated.
+  				Privacy policy acceptance : the end user must check the Jeyzer privacy policy prior to generate the JZR report. 
+  				   This is enabled through the JEYZER_WEB_PORTAL_AGREEMENT_DISPLAY environment variable.
+  				   The privacy policy URL is set through the JEYZER_WEB_PORTAL_PRIVACY_POLICY_URL environment variable.
+  				   Captcha : when the privacy policy acceptance is enabled, the Google ReCaptcha v2 can be activated to protect against bots through the JEYZER_WEB_PORTAL_CAPTCHA_DISPLAY environment variable.
+  				   	   Captcha keys must be set through the JEYZER_WEB_PORTAL_CAPTCHA_SKEY and JEYZER_WEB_PORTAL_CAPTCHA_WEBSITE_KEY environment variables. 
+  				       Use the https://www.google.com/recaptcha/admin/create to create it.
+  			    These variables must be set manually in the setenv-portal.bat|sh.
+  
+		- Jeyzer Analyzer :
+		    - Function node graph generation based on the functions, operations and thread states (if applicable).
+		      Supported in JZR sheets :
+		      	Distinct action profiling (Long action profiling). Node graphs are generated per distinct action if the following conditions are met :
+		      		distinct action contains more than X threads
+		      		distinct action contains more than Y distinct functions and operations
+		      	Action profiling. Node graphs are generated per action if the following conditions are met :
+		      		action contains more than X threads
+		      		action contains more than Y distinct functions and operations
+		      	Top tasks. Stacks contributing to the unique node graph are considered if the following conditions are met :
+		      		each stack appears  more than X times
+		      		each stack contains more than Y distinct functions and operations
+		      	Functional histogram. Stacks contributing to the unique node graph are considered if the following conditions are met :
+		      		each stack appears  more than X times
+		      		each stack contains more than Y distinct functions and operations
+		      	Action histogram. Node graphs are generated per action if the following conditions are met :
+		      		action contains more than X threads
+		      		action contains more than Y distinct functions and operations
+		      	Distinct action histogram. Node graphs are generated per action if the following conditions are met :
+		      		distinct action contains more than X threads
+		      		distinct action contains more than Y distinct functions and operations
+		      	Executor function histogram. Node graphs are generated per executor if the following conditions are met :
+		      		action contains more than X threads
+		      		action contains more than Y distinct functions and operations
+		      	Action dashboard. Node graphs are generated per action if the following conditions are met :
+		      		action contains more than X threads
+		      		action contains more than Y distinct functions and operations
+		        Conditions are set at global configuration level and can be overridden at the JZR sheet level.
+		      Node graph display is css based and defined in the ${JEYZER_ANALYZER_CONFIG_DIR}/graph/static/style_function.css
+		      5 node graph types are supported : graph, tree, tree merged, radial merged or radial. Usually defined at JZR sheet level
+				Graph mode is adapted for histograms or global views like top stack : child nodes can point back to parent nodes
+				Tree mode is adapted for profiling : child nodes are branch nodes
+				Tree merged mode is adapted for simplified profiling : child nodes are branch nodes. Merging is performed based on the node name.
+				Radial merged mode is adapted for simple statistical view : all child nodes link to root node and are merged based on their node name
+				Radial mode is adapted for simple statistical view : all child nodes link to root node
+			  Tree mode and Tree merged mode allow the display of thread states.
+			  For the tree mode, ATBI nodes can be displayed if stack count and stack section size are greater than configurable threshold. 
+		      Node graphs are generated as pictures in the ${JEYZER_OUTPUT_DIR}/graph directory by default and embedded in the JZR sheets.
+		      Graph node picture access in the JZR sheets is performed through a clover symbol cell link.
+		      Graph node picture resolution (unit = pixel) and display in Excel (unit = cell) is set by configuration. 
+		      10 pictures maximum get generated per JZR sheet by default.
+		      Those are deleted unless specified by configuration (see default_setup.xml).
+		    - Contention node graph generation based on the contention types.
+		      Supported in JZR sheets :
+		      	Distinct action profiling (Long action profiling). Contention node graphs are generated per distinct action if the following conditions are met :
+		      		distinct action contains more than X threads
+		      		distinct action contains more than Y distinct functions and operations
+		      		contention percentage is greater than 3%
+		      	Action profiling. Contention node graphs are generated per action if the following conditions are met :
+		      		action contains more than X threads
+		      		action contains more than Y distinct functions and operations
+		      		contention percentage is greater than 3%
+		      	Top tasks. Stacks contributing to the unique node graph are considered if the following conditions are met :
+		      		contention percentage is greater than 3%
+		      	Functional histogram. Stacks contributing to the unique node graph are considered if the following conditions are met :
+		      		contention percentage is greater than 3%
+		      	Distinct action profiling (Long action profiling). Contention node graphs are generated per distinct action if the following conditions are met :
+		      		distinct action contains more than X threads
+		      		distinct action contains more than Y distinct functions and operations
+		      		contention percentage is greater than 3%
+		      	Action profiling. Contention node graphs are generated per action if the following conditions are met :
+		      		action contains more than X threads
+		      		action contains more than Y distinct functions and operations
+		      		contention percentage is greater than 3%
+		      	Executor function histogram. Contention node graphs are generated per executor if the following conditions are met :
+		      		contention percentage is greater than 3%
+		      	Action dashboard. Contention node graphs are generated per action if the following conditions are met :
+		      		contention percentage is greater than 3%
+		        Conditions are set at global configuration level and can be overridden at the JZR sheet level.
+		      Contention node graph display is css based and defined in the ${JEYZER_ANALYZER_CONFIG_DIR}/graph/static/style_contention_types.css
+		      Only graph radial mode is supported.
+		      Contention node graphs are generated as pictures in the ${JEYZER_OUTPUT_DIR}/graph directory by default and embedded in the JZR sheets.
+		      Contention graph node picture access in the JZR sheets is performed through an omega symbol cell link.
+		      Contention graph node picture resolution (unit = pixel) and display in Excel (unit = cell) is set by configuration. 
+		      10 pictures maximum get generated per JZR sheet by default.
+		      Those are deleted unless specified by configuration (see default_setup.xml).
+		    - 2D graph generation based on header figures (CPU, memory, GC info, number of threads..).
+			  Configurable in the report.xml by adding:
+			  	<chart>
+					<serie header="memory_pool-PS Old Gen:usage:used"/>
+					<serie header="memory_pool-PS Eden Space:usage:used"/>
+				</chart>
+			  Graph rendering for lines and dots is configurable in the global setup.xml file.
+			- Analyzer configuration is now stateful in <profile>_analysis.xml. Example :
+				<analysis application_type="Sample" application_id="${JEYZER_TARGET_NAME}" state="production">
+			  Possible states are :
+			  	Production :  Well calibrated profiles and monitoring rules. Suitable for production and QA environments.
+                  			  Required for integration with external systems and email sending.
+                  			  Jeyzer Web relies on this state to display the criticality level of the generated JZR report.
+  				Generic    :  Agnostic master profile.
+                  			  Generated monitoring events may have no meaning.
+                Draft      :  Work in progress profile.
+                              Generated monitoring events may have no meaning at this stage.
+                              Default state if not specified.
+    			Disabled   :  Profile cannot be loaded and initialization exception is thrown.
+                              Jeyzer Web will simply ignore it. 
+                              Useful when handling large set of profiles in Jeyzer Web.
+              Variable should then be used for activating sets of family of master profiles : state="${XY_APP_PROFILE_GROUP_STATE}"
+              Analyzer configuration state is available in the JZR report session info sheet.
+			- Analysis profile is now declaring if the auto discovery mode is supported in the ${JEYZER_TARGET_PROFILE}_analysis.xml.
+			- Analysis profile now allows to dynamically discover the size of the stack of interest through the auto strategy.
+			  This is particularly useful when setting up a generic profile or a new profile.
+			  The auto strategy is applied only if the recording is large enough as it must focus on the inactive part of the recording.
+			  Size of the stack of interest is important parameter used to pre filter stacks, such as stacks in state wait or timed wait.
+			  Stacks below this size will be discarded although running and blocked threads can be kept.
+			  If the target application is under your control, with some tuning, you will use instead the known strategy and manually deduce and the appropriate stack size of interest.
+			- JZR report can be password protected. By default, it is disabled.
+			    Password protection can be set at profile or global setup level.
+			    To activate it in a profile, add the security_profile attribute to the xlsx_report
+			        <xlsx_report ... security_file="${JEYZER_DEMO_MASTER_PROFILES_DIR}/${JEYZER_TARGET_PROFILE}/report/security/report_security.xml">
+			    Security configuration is enabled in the report_security.xml file.
+			    Password can be either:
+			    	Internal mandatory : password is enforced internally through the value attribute. 
+                        Can be set through environment variable or system property.
+                        <password mode="internal_mandatory" value="${JEYZER_DEMO_FEATURES_REPORT_PASSWORD}"/>
+			    	External mandatory : password is enforced externally through thread local variable.
+                        Usually set through the Jeyzer Web Report Generator
+                        <password mode="external_mandatory"  value="${JEYZER_REPORT_PASSWORD}"/>
+			    	External optional : password can be enforced externally through thread local variable.
+                        Usually set through the Jeyzer Web Report Generator
+                        <password mode="external_optional"  value="${JEYZER_REPORT_PASSWORD}"/>
+			    	None : no password is required 
+			    		<password mode="none" />
+			    	Password must contain at least 8 characters.
+			    Encryption is either binary RC4 (weak protection) or AES 256 (strong protection, requires the Java JCE Unlimited).
+			            <encryption algorithm="AES_256" />
+			- Analysis patterns (function, operation, exclude..) are stored in the analysis/patterns.xml
+			  Analysis patterns get loaded in their declaration order.
+			  Analysis patterns are referred through file paths : 
+				  <pattern_set file="${JEYZER_EXTERNAL_MASTER_PROFILES_DIR}/${JEYZER_TARGET_PROFILE}/${JEYZER_TARGET_PROFILE}_profile.xml"/>
+			  Analysis patterns can also be stored in a shared profile and be accessed in a static or dynamic way : see below section.
+			- Dependencies define one or several sets of shared profiles used by the target application. Example:
+			  	<dependencies>
+					<set id="base-shared-deps" profiles="amq, spring, hibernate, c3p0, oracle, jtds, guava, log4j, jeyzer, java"/>
+				</dependencies>
+			  The Jeyzer repository urls can refer to those sets in the profile and monitor rule sections.
+			  Dependencies are defined in the ${JEYZER_TARGET_PROFILE}_analysis.xml file.
+			- Shared profiles are profile sub-units which contain patterns, monitoring rules and stickers.
+				Examples of shared profiles : hibernate, oracle, log4j, jeyzer, java
+			  To benefit from full automation in the analysis (see dynamic loading), each Maven Java project should have its own shared profile. 
+			  In such case, the shared profile name will be the project artefact one. Like the Maven project, the profile can also support versions.
+			  Shared profiles should be stored ultimately inside a Jeyzer repository (see hereafter).
+			  Shared profiles can be referenced statically in the master profile or loaded dynamically :
+			  Shared profile static loading
+			    Shared profile static loading is used when the dependencies are known up front in small to medium application projects.
+			    Those shared profiles are usually version agnostic and rely instead on ranged version stickers when required.
+			    Jeyzer repository urls permit to access it. 
+				Pattern access example : <pattern_sets files="repo://base/@@base-shared-deps@@"/>
+			      Here, the @@base-shared-deps@@ refers to the base-shared-deps dependency set. 
+			  Shared profile dynamic loading
+			    Shared profiles are loaded dynamically from Jeyzer repositories, based on the analyzed JZR recording content. 
+			    Pattern access example : <dynamic_pattern_sets declared_repository_only="false"/>
+			    Shared profile dynamic loading is used within generic profiles or for large applicative projects.
+			    Those shared profiles are usually built in their related project, allowing their versionning when pushed in a repository.
+			    The shared profiles to load relies on the process jar name and version taken out from the Process jar path entries : if Maven is used, those will correspond to the artefact id and version of the Maven project.
+			    Loading is performed in the Process jar path declaration order, always after the static ones.
+			    Dynamic loading loads first the version shared profile (if the process jar version is available) and then the version agnostic shared profile.
+			    Two loading strategies are available :
+			    1. Jeyzer repository scanning (declared_repository_only=false) : all declared Jeyzer repositories are scanned to find the shared profile. 
+			       This implies some initial performance cost (each result is cached for 24 hours by default).
+				2. Jeyzer repository direct access (declared_repository_only=true) : the Jeyzer repository name which contains the shared profile is provided within the process jar path entry. 
+				   It requires initially to declare the Jeyzer-Repository attribute in the jar manifest file of the process jar : 
+				     Jeyzer-Repository=base
+			- Jeyzer repositories are intended to provide easy access to patterns, monitoring rules and stickers from shared profiles.
+			  For example the Jeyzer base repository will give access to classic shared profiles like java, log4j, hibernate..
+			  Repositories are usually maintained else where and made available on a remote location. 
+			    Examples : GitHub for the Jeyzer base, your global company site for proprietary frameworks.
+			  Repositories can be either remote, local (= manual update) or both (local = fall back site).
+			  Jeyzer repositories are referred with Jeyzer repository urls. Example : repo://base/@@base-shared-deps@@
+			  Jeyzer repository urls are always prefixed with repo://
+			  The Jeyzer repository name is set right after the repo url prefix. Example : base
+			  The Jeyzer repository url suffix defines the profile or the set of - agnostic version - profiles (cf. dependencies) to load.
+			  	Examples : @@base-shared-deps@@, logj, hibernate
+			  Jeyzer repository names are defined in repository files.
+			  The default_setup.xml defines the directories containing the repository files :
+			    <repository_setups directories="${JEYZER_ANALYZER_CONFIG_DIR}/repositories;${JEYZER_EXTERNAL_REPOSITORY_SETUP_DIRECTORY}">
+			  The ${JEYZER_ANALYZER_CONFIG_DIR}/repositories/base.xml for example contain the base repository definitions:
+			    <repository id="base" remote="https://raw.githubusercontent.com/jeyzer-repo/base/master/shared" local="${JEYZER_BASE_SHARED_PROFILES_DIR}" local_first="false"/>
+	          The optional local_first attribute permits to reverse the loading order : remote gets loaded last. Useful in case of profile manual tuning phase or if the web is not accessible.
+	          Repositories get referenced by their id within jeyzer repo urls. Ids must be unique.
+	          Both remote and local can reference either a http, https, ftp url or a system path (like a shared drive path).
+	          In the repositories, the profile files must be suffixed with _profile.xml and the monitoring rules files must be suffixed with _monitor.xml.
+	          Example :
+	          		base/  						(Jeyzer base repository)
+	          			shared/							(shared profiles)
+	          				hibernate/		
+	          					hibernate_profile.xml	(Hibernate version agnostic profile)
+	          					hibernate_monitor.xml	(Hibernate version agnostic monitoring rules)
+	          					3.2.7                   (Hibernate version)
+	          						hibernate_profile.xml	(Hibernate version specific profile)
+	          						hibernate_monitor.xml	(Hibernate version specific monitoring rules)
+	          					3.2.8
+	          						...
+	        - Repository remote files can be cached locally for optimization access.
+	          Cache configuration is defined in the default_setup.xml :
+	            <cache enabled="true" directory="${user.home}/.jeyzer" time_to_live="24h"/>
+	          Cache is enabled by default. 
+	          Files get cached in the user home under the .jeyzer directory by default. Directories get created automatically.
+	          time_to_live permits to define the refresh period of each cache entry. By default 1 day. 
+	          When the cache entry expires, it gets reloaded from the remote site. If the reload fails, the cache entry is kept and a warning is displayed.
+	          Do not confuse local repository files and remote repository files which are locally cached. Those are distinct.
+	        - Translator support.
+	          Translators transform the recording data prior to its parsing and analysis. 
+	          By default, translated files are generated in a recording sub-directory, and automatically deleted at analysis completion.
+	          Translators are:
+	            Compression translator : unzip or gunzip the recording. It is activated in standard.
+	                Compressed recording - zip or tar gz file - can be either provided by the Jeyzer Web Analyzer 
+	                or manually by setting the JEYZER_RECORD_FILE, in which case the recording must be placed in the JEYZER_RECORD_DIRECTORY.
+	                Configurable in uncompress.xml. 
+	          	Jeyzer security translator : decrypts the recording using AES 128 key. AES key is itself secured through RSA.
+	          	  AES key is either :
+	          	    Dynamic : provided as part of the recording, in the jzr-recording.key file.
+	          		  The RSA private key used to decrypt the AES key is stored locally in the dynamic/master-private.key file
+	          		  The Jeyzer password manager permits to generate the RSA private key.
+	          		Static : encrypted AES key is kept locally.
+	          		  The AES key is already encrypted at installation time and deployed on both Jeyzer analyzer and recording sides.
+	          		  Each side owns a Jeyzer RSA public key which permits to decrypt the AES key.
+	          		  The Jeyzer password manager permits to generate the encrypted AES key.
+	          	    Configurable in decryption.xml. Configuration sample is provided for reference.
+	            Obfuscation translator : see Multiple deobfuscation support.
+	                Configurable in deobfuscation.xml. Configuration sample is provided for reference.
+	                On first usage, it is recommended to activate the deobfuscated file keeping to check the deobfuscation correctness.
+			- Multiple deobfuscation support. Configurable in <profile>_analysis.xml and any plugin_set.xml.
+			  Deobfuscation is taking the mapping configuration files locally or remotely like for example from a build repository like Nexus. 
+			  Deobfuscation mapping configuration file paths can contain variables referencing property card values such as module name, version, etc
+			  Deobfuscation mapping configuration file paths can contain variables referencing process jar versions for a given process jar name.
+			  in order to bind the obfuscated stacks with the exact original mapping configuration file that did serve to generate it.
+			  Property mappers are used to extract the right properties from the process card properties. See property_card_mapper_set.xml.
+			- Team email sending including as attachments the JZR report.
+			  Configurable in <profile>_analysis.xml and mail-<mail profile>.properties
+			  Sending happens on event threshold reached (Critical by default) 
+			  Email content is customizable through the Velocity mail_content_template.vm file.
+			- Thread dump period is now automatically detected based on file date patterns. 
+			  Detected period value is taken if the configured period value is not provided, like within the Jeyzer web interface.
+			  Detected period value is displayed in the JZR report session info sheet. It is highlighted if its value is different from the configured one by more than 5 seconds. 
+			- Ignored stack file generation. Configurable in <profile>_analysis.xml. Disabled by default
+			- Support of JZR recording snapshot format. 
+			  Time stamp is taken from the file name based on predefined format. Includes time zone indicators.
+			- Support of thread dump file name pattern based on regular expression. 
+			  Time stamp is taken from the dump header as generated by Jstack, or from the "Last Modified By" file attribute.
+			- Support of stack patterns based on regular expressions. 
+			  Use pattern_regex in profiles. Can be combined with pattern.
+			- Thread stack operation and function discovery rules are now supported to allow dynamic search of key words.
+			  This is useful for example when the monitored application doesn't have any dedicated profile, 
+			  (where in such case the "discovery" profile should then be used).
+			  Auto discovery will apply on class name and/or method name, depending on the focus.
+			  Imagine for example that the monitored application deals with car rental, by setting the discovery pattern 
+			  with the "car", "garage" keywords, the function (or operation) auto discovery will match
+			  stack lines containing method such as : RepositoryService.loadCars, RepositoryService.storeCars and classes like GarageManager.repair
+			  Reporting will the handle the following functions : "Repository service load cars", "Repository service store cars", "Garage manager repair".
+			  Note that :			    Keyword first letter is capitalized before stack line matching.
+			    In the previous example, the carryLoad method for example will never match.
+			    Getter and setters are ignored.
+			    In the previous example, the getCars method for example will never match.
+			  Profile configuration example :
+				<discovery_functions>
+					<!-- pattern is a list of keywords, comma separated. Each keyword will issue one discovery rule -->
+					<!-- pattern_regex is optional. Focus can be : method, class, both -->
+					<discovery_function pattern="car,garage" pattern_regex="com.rental.*" focus="both"/>
+					<!-- Like anywhere in the configuration, the below variable can be set as system property or environment variable -->
+					<discovery_function pattern="${JEYZER_ANALYZER_DISCOVERY_FUNCTIONS}" pattern_regex="com.mymodule.*" focus="method"/>
+				</discovery_functions>
+				<discovery_operations>
+					<discovery_function pattern="${JEYZER_ANALYZER_DISCOVERY_FUNCTIONS}" focus="both"/>
+				</discovery_operations>
+			  To highlight the discovery findings, the JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_REGEX property or variable 
+			  should be set with a regular expression containing the different discovery keywords. 
+			  Same applies with the JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_COLOR to set the color display. 
+			  Report highlight configuration example :
+			    <highlight regex="${JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_REGEX}" color="${JEYZER_ANALYZER_DISCOVERY_FUNCTIONS_COLOR}"/> 
+			- Thread stack exclude rules based on thread name. Example : 
+			 		<exclude_thread_names>
+						<!-- Exclude stack based on thread name. Regular expression recommended -->
+						<exclude_thread_name pattern_regex="GC.*" name="GC thread"/>
+						<exclude_thread_name pattern_regex="RMI TCP.*" pattern="JMX server connection timeout" name="RMI thread"/>
+						<exclude_thread_name pattern="Reference Handler" name="Reference Handler"/>
+					</exclude_thread_names>
+			- Thread stack exclude rules now support size attribute (optional) : thread stack is excluded if its size is below the rule limit.
+			- Thread stack executor rules based on thread name. Example :
+					<executor_thread_names>
+						<!-- Executor pattern based on the thread name. Regular expression recommended -->
+						<executor_thread_name pattern="HTTP" name="HTTP thread"/>
+						<executor_thread_name pattern_regex=".*Listener" name="Listener thread"/>
+					</executor_thread_names>
+			- Locker rules apply on code stack on the first 20 lines of the thread dump. 
+			  Permits to identify locked stacks. 
+			  Example :
+					<lockers>
+			    		<!-- Will also match lockInterruptibly -->
+  						<locker pattern="java.util.concurrent.locks.LockSupport.park" name="LockSupport"/>			    
+  						<locker pattern="java.util.concurrent.locks.ReentrantLock.lock" name="ReentrantLock"/>
+					</lockers>
+			- Locking processing now applies on both stacks in Blocked state and locked stacks (see above).
+			  Locking is available in display rules, monitoring rules and Top Stacks.
+			- Contention type is now supported. 
+			  Contention type is specified at the operation level and is optional.
+			  Example :
+			  	<operation pattern="HashMap.get" name="Hash map access"		type="Collection"/>
+				<operation pattern="Hashtable.get" name="Hash table access"	type="Collection"/>
+			  Contention type is available in task sequence display rule (cell and row).
+			  It is supported in the dashboard, histogram, profiling and profile JZR sheets as well as in monitoring rules.
+			- Cell highlights now support regex expressions. Example :
+				<highlight name="Oracle interaction" regex="Oracle.*" color="ORANGE"/>
+			- Cell highlights now support discovery feature. Example :
+				 <highlight regex=".*" color="ORANGE"/>
+			  Displayed names is set dynamically based on the value(s) matching the pattern.
+			  Discovery legend label is set with the "d" letter to distinguish it from other highlights.
+			  Discovery highlight is always applied at last : preset highlight are applied first followed by regex ones.  
+			- Time zone support in the JZR Session details sheet as well as on task sequence headers when available.
+			  Time zone is taken from the file name for the JZR and time stamped file name formats.
+			  Time is displayed as time zone abbreviation (CET, EST..) and source. 
+			  Source can be either : Process (P / monitored process), Custom (C / JZR Recorder configuration), Jeyzer (JZR Recorder process time zone), File (no Jeyzer Recorder involved : time stamped file name format).
+			- CPU runnable thread support to detect any CPU contention.
+			  CPU runnable threads are threads in state Runnable which are eligible for immediate CPU access. 
+			  Eligibility is either based on a white or black contention type list (see default_setup.xml). 
+			  Black contention type list is default and recommended value.
+			- Process up time support in the JZR task sequence time line (main header) when available.
+			- Restart column is now displayed in the JZR task sequence when process up time is available. Can replace a hiatus column.
+			- JZR report display is now theme based. Theme can be either specified in setup.xml or within the report configuration.
+			  By default the vinci one is activated.
+			- JZR report now includes an "Action dashboard" sheet to display the main merged actions (the ones with action graphs).
+			  For each merged action, the following elements get displayed :
+			  		Stack appearance percentages and counts
+			  		Action appearance percentages and counts 
+			  		Average and standard deviation for CPU and memory consumed if available
+			  		Action based monitoring events
+			  		Action graph
+			  Actions to be identified can be excluded from the profiling (configurable).
+			  Action graphs are simplified by ignoring small functions and operations.
+			- JZR report now includes an "Action profiling" sheet to display action stacks in a tree form.
+			  Figures include global appearance percentage and count, percentage appearance within the action 
+			  as well as average and standard deviation for CPU and memory consumed if available.
+			  Actions to be identified can be excluded from the profiling (configurable)
+			  Column grouping is available for CPU info, memory info and all functions/operations details.
+			  ATBI sections can be highlighted if stack count and stack section size are greater than configurable threshold.
+			- JZR report now includes an "Long Action Profiling" JZR report to display, per single action, their related stack profiling.
+			  Configurable stack code line colorization based on function/operation matching is available.
+			  Column grouping is performed for sheet links, action timing, thread info, CPU info, memory info and all operations/functions.
+			- JZR report now includes an "Action histogram" sheet to display the operation and function appearance figures per principal function.
+			  It permits for example to measure cache access or I/O access percentage per main functionality.
+			- JZR report now includes an "Function histogram" sheet to display the global function and operation appearance figures.
+			  Percentage is relative to the number of active stacks.
+			- JZR report now includes an "Executor function histogram" sheet to display the global function and operation appearance figures per executor.
+			  Percentage is relative to the number of active stacks.
+			- JZR report now includes an "Executor histogram" sheet to display the action and stack count appearance figures per executor.
+			  Percentage is relative to the number of active stacks.
+			- JZR report now includes a "Distinct action histogram" sheet to display the operation and function appearance figures per long action.
+			  Percentage is relative to the number of active stacks. 
+			  Long actions are the ones which have a number of stacks greater than a configurable threshold.
+			- JZR report now includes an "Monitoring alerts" sheet to display the result of the monitoring rules.
+			  Several sets of monitoring rules can be attached per JZR sheet, along with applicative and publisher rules.
+			  Upon critical event, tab color is set (configured through the critical_tab_color attribute).
+			  Upon critical event, a global actions graph picture and/or contention type graph picture can be generated.
+			- JZR report now includes a "Monitoring sequence" sheet to display the result of the monitoring rules in a time line manner.
+			  Several sets of monitoring rules can be attached per JZR sheet, along with applicative and publisher rules.
+			  Upon critical event, tab color is set (configured through the critical_tab_color attribute).
+			  Row headers permit to display event details : name, ref, category, duration, start date, size, scope, id.
+			- JZR report now includes an "Event journal" sheet to display the result of the monitoring rules, focusing on the event appearance time.
+			  The journal is very useful when dealing with applicative and publisher events as it permits to correlate those with the monitoring events.
+			  Appearance time of the applicative and publisher events is the event triggering one at application level, as opposed to the recording snapshot one for the monitoring events.
+			  Applicative and publisher event start time is displayed in green. Monitoring event start time is displayed in grey.
+			  Upon critical event, tab color is set (configured through the critical_tab_color attribute).
+			  Upon critical event, a global actions graph picture and/or contention type graph picture can be generated.
+			- JZR report now includes a "Process card" sheet to display the content of the process-card.properties if available.
+			  Properties are displayed into configurable categories. 
+			  By default the following categories are provided : operating system, JVM, regional settings, process, JVM 2ndary paths, JMX
+			  In case of Generic or Jeyzer MX usage, system level properties can be displayed there (ex: application version, profile, context parameters).
+			- JZR report now includes a "States" sheet to display thread states. Runnable states are green. Wait states are blue. Blocked state is orange.
+			- JZR report now includes a "CPU" sheet to display thread CPU measurements. Threads which consume more than 50% CPU are displayed in red.
+			  CPU sheet is displayed only if the thread dump format includes CPU info.
+			- JZR report now includes a "Garbage collection" sheet to display GC measurements.
+			  Garbage collection sheet is displayed only if the thread dump format includes GC info.
+			- JZR report now includes a "Memory" sheet to display memory measurements. Threads which consume more than 100Mb are displayed in orange.
+			  Memory sheet is displayed only if the thread dump format includes memory info.
+			- JZR report now includes a "Menu" sheet. 
+			  Displayed first, it lists all the other JZR sheets with their short description and provides links to access it.
+			  For each JZR sheet entry, it gives the number of items and graph items (graph pictures or charts, specified in parenthesis) it contains 
+			  and its cell color will be the target sheet one if the target sheet contains critical events.
+			- JZR report now includes a "Analysis Patterns" sheet. It lists the analysis pattern details of each loaded profile. 
+			  Pattern display is configurable : by default, only exclude patterns are displayed.
+			- JZR report now includes a "Monitoring rules" sheet. It lists all the monitoring rules and thresholds applied as part of the analysis, 
+			  giving details on their related conditions and stickers. Hit count for each rule threshold and links to monitoring sheets are also made available.
+			  A rule containing several incremental thresholds which have been hit will display a hit count for each threshold, although only the highest threshold is kept.
+			- JZR report now includes a "Monitoring stickers" sheet. It displays a given list of monitoring stickers, including their positive and negative match result as well as their strictness.
+			- JZR report now includes a "Process jars" sheet. It displays the list of process jars loaded by the JVM. 
+			  For each jar file, it displays the library name, version, path and the library version information as well as the Jeyzer Repository, both read from the jar Manifest file. 
+			  It also highlights the snapshot versions or the lack of version.
+			  The "Process jars" sheet is displayed only if the process jar paths file is available in the JZR recording.
+			- JZR report now pre-configured tuning sheets. It permits to setup and fine tune the applicative profiles.
+			- JZR report now includes an "About" sheet to provide details about JHome (version, links, license).
+			- JZR report sequence sheets now include a "headers" section to display:
+			   Process state info (retrieved) : process CPU, system CPU, system memory. Advanced JMX specific.
+			   Process state info (computed) : process CPU, applicative CPU activity, process memory, applicative memory activity. Advanced JMX specific.
+			   Java memory pool figures. Advanced JMX specific.
+			   Object waiting for finalization count. Advanced JMX specific.
+			   Heap and non heap memory figures. Advanced JMX specific.
+			   Garbage collection figures : garbage collector name, garbage collection execution time and count, pool memory before and after garbage collection measurements. Advanced JMX specific.
+			   Garbage collection computed figures :  memory released, % of used memory released, % of GC execution time, GC health indication.
+			     GC health indication is composite value : <% used memory after GC>.<% of before GC memory which as been released>  
+			   Thread count
+			   Recording capture time in ms. Includes the access time of all JMX operations for the Advanced JMX thread dumps.
+			   Recording file name
+			   Recording file size in Kb
+			   Recording file write time in ms. Jeyzer agent specific.
+			   Recording file write speed in Mb/sec. Jeyzer agent specific.
+			   Process up time. Advanced JMX specific.
+			   Deadlock count including the display of the deadlock details as cell comment
+			   Suspended threads count (threads which are suspended on debug breakpoints)
+			   Locked thread count
+			   Biased lock count including the display of the biased lock details as cell comment
+			   Action count
+			   Frozen code state count
+			   Thread pool count based on a regular expression matching the thread name of any stack. Associated to a type of threads (http, consumers, etc.)
+			   Thread pool active count based on a regular expression matching the thread name of any stack of interest
+			   Thread pool active percent : percentage of active stacks vs all stacks of a given thread pool
+			   Jeyzer MX context parameter string values
+			   Jeyzer MX context parameter number values
+			   Jeyzer MX context parameter name value pair displayed as cell comment
+			   Generic MX attribute string values
+			   Generic MX attribute number values
+			   CPU runnable threads count
+			   Function tendency : most frequent function is displayed if observed more than 3 times
+			   Operation tendency : most frequent operation is displayed if observed more than 3 times
+			   Function Operation tendency : most frequent function-operation combination is displayed if observed more than 3 times
+			   Executor tendency : most frequent executor is displayed if observed more than 3 times
+			   Contention type tendency : most frequent contention type is displayed if observed more than 3 times
+			   Named disk space used space in Gb
+			   Named disk space use space percentage 
+			   Named disk space free space in Gb
+			   Named disk space free space percentage
+			   Section delimiter
+			  Headers display can be made conditional based on the thread dump format. 
+			  Header title is set by default on the latest column of the row header ones. The headers title_column_index attribute permits to override it.
+			  Headers do support functions applied on the header data : max, min, average, standard deviation and cumulative.
+			  Each header can define its own color and threshold limit which will apply on the function result.
+			- JZR report sequence sheets now allow to define row headers :
+			   Thread id
+			   Thread name
+			   Thread type
+			   Action size (number of thread dumps)
+			   Action start time
+			   Action minimum duration in seconds
+			   Action consumed memory
+			   Action consumed CPU
+			   Function principal
+			   Operation principal
+			   Contention type principal
+			   Lock state (deadlock or locked/lock owner or suspended)
+			   Jeyzer MX context id
+			   Jeyzer MX action user
+			   Jeyzer MX action principal
+			   Jeyzer MX action start time
+			   Jeyzer MX context parameter string values
+			   Jeyzer MX context parameter number values
+			   Jeyzer MX context parameter name value pair displayed as cell comment
+			   Frozen code state count (number of consecutive identical stacks)
+			   CPU runnable stacks count
+			  Row header values can be colorized based on threshold or text value.
+			  Link can be enabled to reference the first action cell of the current row.
+			- JZR report task sequence now provides action links to navigate on the same action between sheets. 
+			  Action linking can be disabled in the global setup configuration file.
+			- JZR report task sequence now provides header date links to navigate between sheets. 
+			  Header date linking can be disabled in the global setup configuration file.
+			- JZR report task sequence now provides action links on time headers to navigate to the first displayed action. 
+			  Header action linking can be disabled in the global setup configuration file.
+			- JZR report task sequence now provides action highlighting on time headers to indicate starting or on going actions. 
+			  Header action highlighting can be disabled in the global setup configuration file.
+			- JZR report sequence sheets now support action and global statistics for the following display rules:
+				long running actions, frozen code state, lock state as well as CPU and memory related rules.
+			  Statistics get displayed below the Legend section. Can be disabled by configuration at rule level. 
+			- JZR report task sequence now provides panel freeze configuration parameters.
+			  In general, panel freezing is very handy. However, when dealing with large panels, it has to be disabled to allow sheet browsing. 
+			  Panel freeze applies at header (sheet top side) and row header (sheet left side) level.
+			  At sheet header configuration level, it is possible to force the freeze or unfreeze of the header section.
+			  Otherwise, freezing will be applied based on the number of headers to display.
+			  Panel freeze is following this strategy :
+			    For top headers, if there is no task and chart to display, always unfreeze the headers.
+			    If the freeze parameter is set at the headers/row headers configuration level, apply it. Example :
+			      <headers freeze="true">
+			      <row_headers freeze="false">
+			    Otherwise, based on thresholds defined in the global setup configuration file, 
+			    if the number of headers/row headers to display is beyond the threshold, the headers section gets unfrozen.
+			- JZR report task sequence now provides filtering on thread name and id columns.
+			- JZR report task sequence now provides legend link added in top bar 
+			- JZR report now provides cell text wrapping. Use <wrap_text/> in <profile>_report.xml at the sequence sheet level.
+			- JZR report session details sheet now includes the context/issue description, the issuer (email), the request id 
+			  the percentages of functions and operations to be identified and the number of detected stacks.
+			  JZR report session details will expose the analysis file and directory paths if the expose_paths="true" is set to true. False by default.
+			- JZR report session details sheet now includes the Jeyzer Recorder, Publisher (taken out from the process card) and Analyzer versions.
+			- JZR report session details sheet now includes the Jeyzer analysis origin (Jeyzer Monitor, Jeyzer Web Analyzer..) and the analysis type : post mortem or runtime.
+			- JZR report sheets can now be linked from the monitoring and task list sheets using the link_type attribute :
+			  	<sheet type="sequence" name="Task sequence" link_type="Tsk">
+			- JZR report sheets are now displayed in the declaration order
+			- JZR report configuration can now reference external sheet configuration files.
+			  A set of standard JZR sheet configurations (lock, CPU, process info, etc..) is now available in the <JEYZER_ANALYZER_CONFIG_DIR>/report/sheet directory.
+			- JZR report task sequences now display the thread lock context :
+				Threads waiting for locks to be released in orange
+				Threads owning a locks in light purple
+				Threads owning a locks and waiting for lock in dark purple
+				Threads in deadlock in red
+				Threads suspended on debug breakpoints in red
+		    - JZR report task sequences now support biased lock display (cell text is underlined)
+		    - JZR report task sequences now support Jeyzer MX value display at cell level : 
+		       Jeyzer MX context parameter string value
+			   Jeyzer MX context parameter number value
+			   Jeyzer MX context parameter name value pair displayed as cell comment
+			- JZR report task sequences now support the highlighting of /OTBI of interest at cell level.
+			  Interest is based on the stack size. If size greater than given threshold, cell color is set.
+			- JZR report task sequences now support the display of stack size and their highlighting for the stacks whom size is below threshold. 
+			  Permits to setup thread exclude rules based on stack size. 
+			- JZR report top tasks now provides the stack size, thread state (only blocked state get displayed in standard) and class lock name. Column filters were added.
+			  Configurable stack code line colorization based on function/operation matching is now available.
+			  Operation and function tags can be displayed as part of the stack.
+			- JZR report task lists now provides column grouping for the sheet links, thread info, action timing, action duration, CPU info and memory info.
+			- JZR report task lists now provides applicative restart info.
+			- JZR report tab color can now be set
+			- JZR column grouping is now configurable in the global setup configuration file.
+			- Color supports now the RGB definition. Format is RGB-<Red value>-<Green value>-<Blue value>  
+			- IBM core format support
+			- Jstack hung format support (jstack -F option)
+			- UFO file generation can now be enabled by configuration. UFO file is now zipped.
+			  UFO stacks get either printed per file or per frequency.  
+			- Internal system property "td.analysis.rule.stack.disabled" added. 
+			  When set on the startup command line, it permits to disable the stack as comments generation in the JZR report.
+
+		- Jeyzer Monitor :
+		    - Monitoring license support added, based on MAC address and asymetric signature. 
+		      Use the tools/license/apps to generate, check licenses and issue requests.
+		      Licenses have an expiration date : a warning is emitted within the month before expiration.
+		      In the absence of monitoring license :
+		        - JZR reports generated through the Jeyzer Monitor contain warnings in the Menu, About page and Monitoring sheets. License status is also displayed in the Excel info panel.
+		        - Analyzer license events get generated. 5 events are available : missing license, expired license, about to expire license, invalid license, technical error license.
+		        - Security features (report encryption and recording decryption) are disabled.
+			  The Menu and About pages are now protected with a random 16 char password.
+			- New monitoring rule framework allowing flexible declaration and easy rule creation.
+				Monitoring rules are declared with one or several thresholds. Example :
+					<rule name="Frozen stacks" stickers="java8, production" ref="ORG-WEB-005">
+						<narrative>This rule detects frozen stacks.</narrative>
+						<thresholds>
+							<threshold 	type="action signal"
+										time="40" 
+										level="WARNING" 
+										sub_level="9"
+										message="Task showing identical consecutive stacks for long time. Collects thread dumps and contact your software provider."/>
+							<threshold 	type="action signal" 
+										count="2" 
+										function="Frozen code section.*" 
+										level="INFO"
+										sub_level="6"
+										trust_factor="90"
+										message="Task showing identical consecutive stacks on specific action. Collects thread dumps and contact your software provider."/>
+						</thresholds>
+					</rule>
+				Each threshold is responsible to apply the embedding rule based on a set of conditions in order to generate a monitoring event:
+					Primary condition. One of :
+						pattern : regular expression
+						value : long value
+						signal : condition set as per defined by the rule
+						custom : any combination of parameters, including potentially the above ones
+					Event time based condition (if not specified, count is set to 1) :
+						time : long value. Duration of the event. 
+						   For action based events, duration is the sum of the event cases within the action. Same applies for the count.
+						   Example : a single action of 10 minutes with 2 thread locker cases of 1 minutes and 3 minutes will not match a thread locker rule with a time threshold of 5 minutes.
+						count : number of consecutive recording snapshots
+						percentage_in_action : percentage presence of the event within an action. 
+						   When combined with time, time is the duration of the entire action. Same applies for the count.
+						   Example : a single action of 10 minutes with 2 thread locker cases of 1 minutes and 3 minutes will match a thread locker rule with percentage in action of 40% and a time threshold of 5 minutes.
+					Task filtering condition : 
+						function : principal function. Thresholds with function are always applied first within the same level.
+				Each threshold generates events with the given message, the parent rule ref combined with the threshold one, its level of criticality (INFO, WARNING, CRITICAL) and an optional sub level that reflects the importance of the rule.
+				Each threshold has a default trust factor of 100. Trust factor reflects the level of confidence in the event. Usually it applies to rules related to bug suspicions. The trust_factor value must be between 1 and 100.
+				A rule can contain up to 9 thresholds. Create additional rules to accommodate the extra ones.
+				Each rule has a unique reference (ref).
+					Refs are propagated on the generated events to keep track of their origin. 
+					Jeyzer rule refs are prefixed with JZR, demo rules with DMO. Use your own naming convention. Recommended one is <Organisation>-<Rule group>-<Id>. Example : ORG-WEB-005
+					Rule refs are automatically suffixed with the threshold index (which corresponds to its declaration index within the rule). Example : ORG-WEB-0051
+					Refs are printed as <Rule ref><Threshold index> in the JZR reports when displaying rules and events and on external interfaces.
+				Rules can have optional stickers that indicate in which situation the rule gets activated and therefore applied.
+					Stickers are static conditions which can be either:
+						Ambient analyzer condition
+							The sticker is a flag provided within a list, usually set through an environment variable.
+								<!-- Analyzer ambient stickers. Examples : code_analysis, performance..  -->
+								<sticker_set list="${JEYZER_MONITOR_ANALYZER_STICKERS}" group="analyzer"/>
+						Target applicative condition
+							The sticker is matched either against a process card property value
+								<sticker name="windows" type="property card" property="os.name" pattern="Windows"/>
+							or against a target process command line parameter
+								Below example would match any startup parameter such as -Dlevel=debug or -level=debug or level=debug
+								<sticker name="debug" type="process command line property" property="level" pattern="debug"/>
+							or against a process jar version
+								Below example would match any logback-classic jar library with a 1.0.x version :
+								<sticker name="logback-1.0.x" type="process jar version" jar_name="logback-classic" pattern="^1\.0\.*"/>
+					Appliance attribute on stickers is optional. It accepts the strict or lazy values. If not specified, default value is strict.
+					It determines if the sticker should apply when it cannot be assessed, for example if the process card is not available for a property card sticker, 
+					    or if the process jar paths is not available for a process jar version sticker (not available meaning : missing in the JZR recording).
+						Strict : the sticker will not match if it cannot be assessed. Default value. This is the recommended value when used in a matching sticker rule or a version based sticker.
+						Lazy :   the sticker will match if it cannot be assessed. This is the recommended value if the sticker is used just to filter the rules.
+					Stickers can be defined at global level (in the default_setup.xml), at master profile level along with the monitoring rule declarations, or at shared profile level using the dependency mechanism :
+					   	<stickers ignore="false">
+							<sticker_sets files="repo://base/@@base-shared-deps@@"/>
+							<sticker_set file="${JEYZER_DEMO_MASTER_PROFILES_DIR}/${JEYZER_TARGET_PROFILE}/monitor/stickers/demo_stickers.xml"/>
+						</stickers>
+					Stickers usually belong to a group :
+						<stickers group="Operating Systems">
+							<sticker name="windows" type="property card" property="os.name" pattern="Windows"/>
+					Stickers are referenced either at rule group level (which therefore applies to all the rules of this group) or at rule level:
+						<rules stickers="windows">
+							<rule name="Frozen stacks" stickers="java8, debug">
+					Sticker reference can be the sticker name (java8) or the full sticker name (group prefixed : Java version.java8). 
+					Sticker reference can use the negative logical operator
+							<rule name="Frozen stacks" stickers="!prod">
+					The JZR sheet monitoring_stickers permits to list the available stickers in the analysis and their matching value.
+				All rules have by default a sub level with a value from 1 to 5 : it is possible to override it with a 6 to 10 value at the threshold level, typically to distinguish applicative events.
+				The combination of the level and sub level is called event ranking : C10 is the maximum one. I1 is the minimum.
+				Ranking is used to highlight the events in the JZR Monitoring Alerts sheet (C1-10 -> red spectrum, W1-10 -> yellow spectrum, I1-10 -> blue spectrum).
+				Type defines the primary condition (as listed above) and the threshold appliance scope : system, global, session, action or task.
+					System applies on static process parameters such as process card properties (ex: java version). Only one event can be generated. Applies only in reporting mode.
+					Global applies for the whole session. Therefore, only one event can be generated.
+					Session applies for each isolated situation. Several events can be generated.
+					Action applies at the action level. Only one event is generated. 
+					Stack applies for each situation that matches the threshold conditions within one action. Several events can be generated for one action.
+				Rules usually do support either global and session scope or action and stack cope or system scope : scope validation is performed at rule loading.
+				Note : If several thresholds apply for the same rule, for events with same start and end date, only the one with the highest level of criticality is kept.
+				       To extend this feature to several identical rules (in which case those rules should be reviewed in the first place), enable the clean_duplicate_events parameter. False by default.
+				All rules have by default a narrative which describes what the rule does. Narrative can be overridden therefore customized using the <narrative>.
+			- New advanced monitoring rules : 
+				CPU consuming action. If task consuming more than X CPU % for certain period, generate event.
+				CPU consuming process. If process consuming more than X CPU % for certain period, generate event.
+				Memory consuming task. If task consuming more than X heap applicative memory % for certain period, generate event.
+				Memory consuming process. If process consuming more than X heap memory %  for certain period, generate event.
+				Memory consuming system. If system consuming more than X system memory %  for certain period, generate event.
+				Excessive GC time. If Garbage Collection takes more than X ms for certain period, generate event.  
+				GC failing to release memory. If used memory is increasing and upper than W %, released memory is lower than X % and GC time is higher than Y ms for certain period, generate event.
+				Old GC execution count. If old GC execution count greater/lower or equal than X value for certain period, generate event.
+				Deadlock. If deadlock is detected, generate event.
+				Suspended threads. If suspended threads on a debug breakpoint are detected, generate event.
+				Jeyzer MX context parameter number. If process context parameter greater/lower or equal than X value for Y times, generate event.
+				Jeyzer MX context parameter pattern. If process context parameter matches predefined parameter, generate event.
+				Task Jeyzer MX context parameter number. If action context parameter greater/lower or equal than X value for Y times, generate event.
+				Task Jeyzer MX context parameter pattern. If action context parameter matches predefined parameter, generate event.
+				Process up time. If process is running longer than X value, generate event.
+				Process restart. If process is restarted, generate event.
+				Process down time. If process is restarted after long time, generate event.
+				Function. If function is detected within a stack, generate event.
+				Operation. If operation is detected within a stack, generate event.
+				Recording snapshot capture time. If thread dump capture time is greater than X value, generate event.
+				Process system CPU. If process system CPU % is greater than X value, generate event.
+				Stack execution pattern. If code regex pattern is matched within a stack, generate event.
+				MX bean parameter number. If process MX bean parameter greater/lower or equal than X value for Y times, generate event.
+				MX bean parameter pattern. If process MX bean parameter matches predefined parameter, generate event.
+				Process card property value. If property value greater/lower or equal than X value, generate event.
+				Process card property pattern. If property value matches predefined parameter, generate event.
+				Process card property absence. If property is missing, generate event.
+				Function global percentage. If function appearance in stack percentage greater/lower or equal than X value, generate event.
+				Operation global percentage. If operation appearance in stack percentage greater/lower or equal than X value, generate event.
+				Function in principal percentage. If function appearance in stack percentage within action principal greater/lower or equal than X value, generate event.
+				Operation in principal percentage. If operation appearance in stack percentage within action principal greater/lower or equal than X value, generate event.
+				Process command line property number. If property value greater/lower or equal than X value, generate event.
+				Process command line property pattern. If property value matches predefined parameter, generate event.
+				Process command line parameter pattern. If command line parameter matches predefined parameter, generate event.
+				Process command line parameter absence. If command line parameter is missing, generate event.
+				Process command line max heap size. If max heap size (-Xmx) is lower than X value in Mb, generate event.
+				Function parallel contention. If function name regex is seen in more than X parallel threads, generate event.
+				Operation parallel contention. If operation name regex is seen in more than X parallel threads, generate event.
+				Locks contention. If more than X threads are locked, whatever if one or several lockers are involved, generate event.
+				Absent threads. If number of threads (active and inactive) matching the regex pattern is lower or equal than X, generate event.
+				Contention type pattern. If contention type is detected within a stack, generate event.
+				Contention type global percentage. If contention type appearance in stack percentage greater/lower or equal than X value, generate event.
+				Contention type in principal percentage. If contention type appearance in stack percentage within action principal greater/lower or equal than X value, generate event.
+				Contention type parallel contention. If contention type name regex is seen in more than X parallel threads, generate event.
+				Hiatus time. If hiatus time is more than X seconds between 2 recording snapshots, generate event. Example : application restarted after long time.
+				Missing thread dump. If successive missing thread dumps observed for [count] times or [time] in seconds, generate event. Out of memory situation typically trigger such scenario.
+				CPU Runnable vs CPU capacity. If the number of CPU runnable threads is greater or equal to the number of available CPUs (as per the jzr.ext.process.available.processors process card property), generate event.
+				Function presence. If function is detected in the analysis, generate event. Useful to detect deprecated classes.
+				Operation presence. If operation is detected in the analysis, generate event. Useful to detect deprecated classes.
+				Named thread limit. If number of inactive and active threads matching regex thread name greater or equal than X value for Y times, generate event.
+				Named thread leak. If number of inactive and active threads matching regex thread name greater or equal than X value for [count] times or [time] in seconds and constantly increasing by delta_y threads every delta_x recording snapshots, generate event.
+				Global thread leak. If total number of threads greater or equal than X value for [count] times or [time] in seconds and constantly increasing by delta_y threads every delta_x recording snapshots, generate event.
+				Multi function contention. If the list of comma separated functions [functions] is respectively seen in more than [function_appearance_thresholds] parallel threads, generate event.
+				Function and operation parallel contention. If function name regex and operation name regex are seen in more than X parallel threads, generate event.
+				Disk space free. If free disk space in Gb is lower than X value for [count] times or [time], generate event. Applies on a disk space identified by id.
+				Disk space free percent. If free disk percentage is lower than X value for [count] times or [time], generate event. Applies on a disk space identified by id.
+				Disk space used. If used disk space in Gb is greater than X value for [count] times or [time], generate event. Applies on a disk space identified by id.
+				Disk space used percent. If used disk percentage is greater than X value for [count] times or [time], generate event. Applies on a disk space identified by id.
+				Disk space total. If total disk space in Gb is greater than X value, generate event. Applies on a disk space identified by id.
+				Disk space write. If recording write speed in Kb/sec is lower than X value, generate event.
+				Disk space time. If recording write time in ms is higher than X value, generate event.
+				Applicative task. See section below
+				Applicative session. See section below
+				Applicative system. See section below
+				Jeyzer publisher rule. See section below
+				Sticker match rule. If the rule sticker(s) is/are matched, generate event. This rule must get associated to one or several stickers. It has no check body and relies only on the stickers.
+				  Process card property rules are quite similar, but stickers can also be ambient based and it prevents anyway from duplicating the sticker property conditions in the monitoring rules.
+				Process jar version. If the rule sticker(s) is/are matched, generate event. This rule must get associated to at least one process jar version sticker. It has no check body and relies only on the stickers.
+				  Rule is similar to the sticker match rule.
+				Process jar version absence. If one or more process jars do not have any version, generate event.
+				Process jar version snapshot. If one or more process jars are snapshot jars (or any jar having any alphabetic character as part of their version), generate event.
+				Process jar multiple versions. If one or more process jars are present multiple times under different versions, generate event.
+				Process jar name. If a process jar name is matching the given pattern, generate event.
+				Process jar name absence. If no process jar name is matching the given pattern, generate event.
+				Process jar manifest version mismatch. If the process jar file name version differs from the jar version stored in the Manifest attributes, generate event.
+			- Applicative rules permit to handle the events published by the monitored application through the Jeyzer Publisher interface and captured by the Jeyzer Recorder.
+			  Applicative events can be either system, session or task ones and do represent an applicative notification like a service starting, an applicative sanity check or an incident declaration.
+			  Applicative events are quite useful when correlated with the Jeyzer monitoring events to understand any critical issue appearance.
+			  Applicative events do carry a level and sub level, an applicative code (mapped to a rule reference id) and event information.
+			  Applicative events can be one shot or time bounded. In progress events will be published in every recording snapshot.
+			  Applicative events are not subject to rule election : applicative rules are therefore only event medias plugged inside the Jeyzer monitoring engine.
+			  Applicative rules are declared along with rule sets using the all_applicative_rules, task_applicative_rules, session_applicative_rules and system_applicative_rules
+			  Applicative rules can be filtered by applicative event code (= rule reference internally) with the exclude_ref_patterns and include_ref_patterns.
+			  The include_ref_patterns is a list of comma separated applicative event code regular expressions. This is a white list. If not specified, all applicative rules are considered.
+			  The exclude_ref_patterns is also a list of comma separated applicative event code regular expressions. This is a black list, applied after the include if any.
+			- Jeyzer publisher rules permit to handle the Jeyzer Publisher events and captured by the Jeyzer Recorder.
+			  Jeyzer publisher events are oneshot session events and carry a Jeyzer Publisher notification like a Jeyzer recording collection, a Jeyzer publishing activation/deactivation (data or events), 
+			  or a Jeyzer event flooding (which leads to the loss of old events). See the Jeyzer Publisher API documentation for the exhaustive list of events.
+			  Jeyzer publisher events are not subject to rule election : Jeyzer publisher rules are therefore only event medias plugged inside the Jeyzer monitoring engine.
+			  Jeyzer publisher rules are declared along with rule sets using the jeyzer_publisher_rules.
+			- Example of declaration of various list of rules :
+				<rules>
+					<rule_sets files="repo://base/@@base-shared-deps@@"/>
+					<rule_set file="${JEYZER_ANALYZER_CONFIG_DIR}/monitor/rules/standard_rules.xml"/>
+					<rule_set file="${JEYZER_ANALYZER_CONFIG_DIR}/monitor/rules/advanced_rules.xml"/>
+					<all_applicative_rules exclude_ref_patterns="DEBUG_EVENT_.*"/>
+					<jeyzer_publisher_rules/>
+				</rules>
+			- JZR report generation can be triggered upon event category threshold.
+			  JZR report can be propagated to publishers (web, mailer).
+			  Caution : JZR report generation can be memory consuming. 
+			    Fine tune the Monitoring Xmx parameters accordingly and execute it on a different host to lower its impact.
+			- Action graph picture generation along with its HTML container page at the end of each monitoring session.
+			  Action graph picture can be propagated to publishers (web, mailer).
+			  By default : Enabled and web published.
+			  Graph configuration is set in the function_graph_player.xml file.
+			- Contention type graph picture generation along with its HTML container page at the end of each monitoring session.
+			  Contention type graph picture can be propagated to publishers (web, mailer).
+			  By default : Enabled and web published.
+			  Graph configuration is set in the contention_graph_player.xml file.
+			- Alerts distribution configurable in <profile>_monitor.xml file. 
+			  Alerts distribution is performed through event loggers and event publishers.
+			  Event publishers permit to interact with the external world :
+			  	Mailer
+			  	  Mailer activation is performed upon event category threshold (Critical by default). 
+			  	  It accepts attachments : event logger outputs and/or JZR report and/or Action graph picture.
+			  	  Email content can include a monitoring events Journal.
+			  	  HTML email content is customizable through the Velocity mail_content_template.vm file.
+			  	Web
+			  	  Web publisher is deploying the event logger outputs and/or JZR report  and/or Action graph picture under a web directory.
+			  	  It's also building an url for the deployed document which can be reused elsewhere (cf. Jeyzer Monitor Oneshot)
+			  	Sound
+			  	  Generates sounds for critical and warning events. Disabled by default.
+			  Event loggers are generating events into files in the following format(s) :
+				Journal
+				CSV file with headers
+				HTML
+				  HTML content is customizable through a Velocity template file (events_template.vm) available in the default configuration setup.
+			  Event loggers are referencing the publishers on which their generated output must be sent to.
+
+		- Jeyzer Multi-Monitor :
+			- Permits to execute several Jeyzer Monitor within one single java monitoring process
+			  The list of monitoring configurations to load is defined in the multi_monitor.xml file.
+			  Number of parallel monitoring executions (parallel_max) is set by configuration in order to limit the monitoring impact.
+			  In case of thread dump archiving, the monitoring scanning period (JEYZER_MONITOR_SCAN_PERIOD) 
+			  must be lower than the archiving offset (JEYZER_RECORD_ARCHIVE_TIME_OFFSET) to get a perfect and complete monitoring coverage.
+
+		- Jeyzer Monitor Console :
+			- Runtime thread activity visualizer (Java UI).
+			  Action display mode is either : merged (thread name is then displayed with a thread counter) or single/thread level.
+			   If application is generating high amount of threads, prefer the merged mode.  
+			  Functions and operations are displayed respectively in blue and green circles : circle size is growing with time to represent activity concentration.
+			  Thread name is displayed with a pink square. Square becomes red in case of high CPU usage.
+			  Thread state (running, locked, deadlock) is displayed respectively in green, orange and red.
+			  Previous activity of the threads can be displayed as phantomized : nodes are then greyed out and will stay for a configurable amount of time.
+			  No activity detection message is displayed if no active threads are found.
+			  Missing thread dump file message is displayed if a thread dump hiatus is found.
+			  Optional. Enabled by default.
+			- Action graph picture generation along with its HTML container page on each thread dump analysis.
+			  Always activated.
+			- Graph configuration is set in the graph_player.xml file.
+
+		- Jeyzer replay :
+			- Thread activity replay visualizer (Java UI).
+			  Action display mode is either : merged (thread name is then displayed with a thread counter) or single/thread level.
+			   If application is generating high amount of threads, prefer the merged mode.
+			  Functions and operations are displayed respectively in blue and green circles : circle size is growing with time to represent activity concentration.
+			  Thread name is displayed with a pink square. Square becomes red in case of high CPU usage.
+			  Thread state (running, locked, deadlock) is displayed respectively in green, orange and red.
+			  Previous activity of the threads can be displayed as phantomized : nodes are then greyed out and will stay for a configurable amount of time.
+			  No activity detection message is displayed if no active threads are found.
+			- Graph configuration is set in the graph_player.xml file.
+
+		- Jeyzer Monitor oneshot :
+			- Permits to execute Jeyzer Monitor in a one shot mode.
+			  This is useful when called from an external 3rd party monitoring solution like Nagios (cf. Nagios active mode combined with the Nrpe/NSClient using the bat execution.). 
+			  The output of the execution is one trace line on the process output which will give the status (no events/events/error) and refer a monitoring events doc url if applicable.
+			  The exit code is giving the highest event category encountered : 0 for INFO, 1 for WARNING, 2 for CRITICAL and 3 for ERROR or UNKNOWN.
+			  This mode requires to enable the web publisher and to have access to any HTTP server.
+			  Limitation : events are not persisted from one monitoring execution to another. Therefore, it is recommended to set a large time period between each execution (like 15 mn).
+			  Before setting up the integration with Nagios, make sure that the jeyzer-monitor-oneshot.bat|sh can be executed successfully from the command line.
+			  
+		- Supported deobfuscation plugins : 
+		    - Retrace-alt : full rewrite of the Proguard retrace tool, adapted for Jeyzer. 
+		      Under MIT license. See https://github.com/Artyomcool/retrace
+			- Proguard retrace : original Proguard tool.
+			  Under GPL license. Not distributed with Jeyzer.
+		  Note : Proguard obfuscation must use these options : -dontoptimize -renamesourcefileattribute SourceFile -keepattributes SourceFile,LineNumberTable
+
+  

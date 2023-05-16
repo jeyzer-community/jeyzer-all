@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.jeyzer</groupId>
+	<artifactId>jeyzer-all</artifactId>
+	<packaging>pom</packaging>
+	<version>3.0</version>
+	<name>Jeyzer All</name>
+	
+	<properties>
+		<project.encoding>UTF-8</project.encoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Velocity - Used by Jeyzer analyzer, web projects -->
+		<commons-lang.commons-lang.version>2.4</commons-lang.commons-lang.version>
+		<commons-collections.commons-collections.version>3.2.1</commons-collections.commons-collections.version>
+		<org.apache.velocity.velocity.version>1.7</org.apache.velocity.velocity.version>
+		
+		<!-- Graphstream - Used by Jeyzer analyzer, web projects -->
+		<org.graphstream.mbox2.version>1.0</org.graphstream.mbox2.version>
+		<org.graphstream.pherd.version>1.0</org.graphstream.pherd.version>
+		<org.scala-lang.scala-library.version>2.10.1</org.scala-lang.scala-library.version>
+		<org.graphstream.gs-ui.version>1.3</org.graphstream.gs-ui.version>
+		<org.graphstream.gs-algo.version>1.3</org.graphstream.gs-algo.version>
+		<org.graphstream.gs-core-alt.version>1.3.1</org.graphstream.gs-core-alt.version>
+		<jfreechart.version>1.0.14</jfreechart.version>
+		
+		<!-- JMusic - Used by Jeyzer analyzer, web projects -->
+		<com.explodingart.jmusic.version>1.6.4</com.explodingart.jmusic.version>
+		
+		<!-- Retrace-alt - Used by Jeyzer analyzer, web projects. Alternative to Proguard retrace -->
+		<com.github.artyomcool.retrace.retrace-alt.version>1.1.4</com.github.artyomcool.retrace.retrace-alt.version>
+		
+		<!-- Proguard - Used by Jeyzer analyzer, web projects -->
+		<net.sf.proguard.proguard-base.version>5.2.1</net.sf.proguard.proguard-base.version>
+		<net.sf.proguard.proguard-retrace.version>5.2.1</net.sf.proguard.proguard-retrace.version>
+		
+		<!-- Logback - Used by Jeyzer analyzer, recorder, web projects -->
+		<ch.qos.logback.logback-classic.version>1.2.3</ch.qos.logback.logback-classic.version>
+		<slf4j-api.version>1.7.25</slf4j-api.version>
+		<logback-core.version>1.2.3</logback-core.version>
+		
+		<!-- Apache compress - Used by Jeyzer recorder, analyzer projects and POI -->
+		<org.apache.commons.commons-compress.version>1.22</org.apache.commons.commons-compress.version>
+		
+		<!-- Javax mail - Used by Jeyzer analyzer, web projects -->
+		<com.sun.mail.javax.mail.version>1.6.2</com.sun.mail.javax.mail.version>
+		<!-- Sun activation required on Java 11 -->
+		<com.sun.activation.javax.activation.version>1.2.0</com.sun.activation.javax.activation.version>
+
+		<!-- Guava - Used by Jeyzer analyzer, profile-updater projects -->
+		<com.google.guava.guava.version>16.0.1</com.google.guava.guava.version>
+		
+		<!-- Apache POI - Used by Jeyzer analyzer, web projects -->
+		<org.apache.poi.poi-ooxml.version>4.1.2</org.apache.poi.poi-ooxml.version>
+		<apache.poi.version>4.1.2</apache.poi.version>
+		<apache.poi-ooxml-schemas.version>4.1.2</apache.poi-ooxml-schemas.version>		
+		<org.apache.poi.ooxml-schemas.version>1.4</org.apache.poi.ooxml-schemas.version>
+		<apache.poi.xmlbeans.version>3.1.0</apache.poi.xmlbeans.version>
+		<org.apache.commons.commons-collections4.version>4.4</org.apache.commons.commons-collections4.version>
+		<commons-codec.commons-codec.version>1.13</commons-codec.commons-codec.version>
+		<org.apache.commons.commons-math3.version>3.4.1</org.apache.commons.commons-math3.version>
+		
+		<!-- JIRA connectivity Okhttp -->
+		<com.squareup.okhttp3.okhttp.version>3.14.9</com.squareup.okhttp3.okhttp.version>
+		<com.squareup.okio.okio.version>1.17.2</com.squareup.okio.okio.version>
+		
+		<!-- JIRA connectivity REST API -->
+		<com.atlassian.jira.rest.jira-client.version>3.0.3</com.atlassian.jira.rest.jira-client.version>
+		<org.threeten.threetenbp.version>1.3.1</org.threeten.threetenbp.version>
+		<org.glassfish.hk2.osgi-resource-locator.version>1.0.3</org.glassfish.hk2.osgi-resource-locator.version>		
+		<org.jvnet.mimepull.mimepull.version>1.9.11</org.jvnet.mimepull.mimepull.version>
+		<org.glassfish.jersey.media.jersey-media-multipart.version>2.29.1</org.glassfish.jersey.media.jersey-media-multipart.version>
+		<org.glassfish.jersey.core.jersey-client.version>2.29.1</org.glassfish.jersey.core.jersey-client.version>
+		<org.glassfish.jersey.core.jersey-common.version>2.29.1</org.glassfish.jersey.core.jersey-common.version>
+		<org.glassfish.hk2.external.jakarta.inject.version>2.6.1</org.glassfish.hk2.external.jakarta.inject.version>
+		<jakarta.ws.rs.jakarta.ws.rs-api.version>2.1.6</jakarta.ws.rs.jakarta.ws.rs-api.version>
+		<jakarta.annotation.jakarta.annotation-api.version>1.3.5</jakarta.annotation.jakarta.annotation-api.version>
+		<com.fasterxml.jackson.core.jackson-databind.version>2.6.4</com.fasterxml.jackson.core.jackson-databind.version>
+		<com.github.joschi.jackson.jackson-datatype-threetenbp.version>2.6.4</com.github.joschi.jackson.jackson-datatype-threetenbp.version>
+		<org.glassfish.jersey.media.jersey-media-json-jackson.version>2.29.1</org.glassfish.jersey.media.jersey-media-json-jackson.version>
+		<org.glassfish.jersey.ext.jersey-entity-filtering.version>2.29.1</org.glassfish.jersey.ext.jersey-entity-filtering.version>
+		<com.fasterxml.jackson.core.jackson-core.version>2.6.4</com.fasterxml.jackson.core.jackson-core.version>
+		<com.fasterxml.jackson.core.jackson-annotations.version>2.6.0</com.fasterxml.jackson.core.jackson-annotations.version>
+		<com.github.virtuald.curvesapi.version>1.06</com.github.virtuald.curvesapi.version>
+		<org.hamcrest.hamcrest-core.version>1.3</org.hamcrest.hamcrest-core.version>
+		<org.glassfish.jersey.inject.jersey-hk2.version>2.29.1</org.glassfish.jersey.inject.jersey-hk2.version>
+		<org.glassfish.hk2.hk2-api.version>2.6.1</org.glassfish.hk2.hk2-api.version>
+		<org.glassfish.hk2.hk2-locator.version>2.6.1</org.glassfish.hk2.hk2-locator.version>
+		<org.glassfish.hk2.hk2-utils.version>2.6.1</org.glassfish.hk2.hk2-utils.version>
+		
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.6.0.1398</version>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+		</pluginManagement>
+	</build>
+
+	<dependencyManagement>
+	</dependencyManagement>
+	
+	<modules>
+		<module>../jeyzer-external/lib/Graphstream-core-alt</module>
+		<module>../jeyzer-external/lib/Retrace-alt</module>
+		<module>../jeyzer-agent</module>
+		<module>../jeyzer-profile-updaters</module>
+		<module>../jeyzer-annotations</module>
+		<module>../jeyzer-annotation-processors</module>
+		<module>../jeyzer-logger</module>
+		<module>../jeyzer-publish</module>
+		<module>../jeyzer-recorder</module>
+		<module>../jeyzer-jfr</module>
+		<module>../jeyzer-demo-shared</module>
+		<module>../jeyzer-demo</module>
+		<module>../jeyzer-analyzer/analyzer</module>
+		<module>../jeyzer-analyzer/web</module>
+		<module>../jeyzer-analyzer/web/release/tomcat</module>
+		<module>../jeyzer-repo</module>
+		<module>../jeyzer-distribution/demo-samples</module>
+		<module>../jeyzer-distribution/project-dist</module>
+		<module>../jeyzer-distribution/installer/ecosystem</module>
+		<module>../jeyzer-distribution/installer/recorder</module>
+		<module>../jeyzer-distribution/docker</module>
+		<module>../jeyzer-distribution/aws-dist</module>
+	</modules>
+
+	<repositories>
+	</repositories>
+  
+  	<scm>
+		<url>https://192.168.1.15/jeyzer/Jeyzer.git</url> 
+		<connection>scm:git:ssh://git@192.168.1.15/jeyzer/Jeyzer.git</connection>
+		<developerConnection>scm:git:ssh://git@192.168.1.15/jeyzer/Jeyzer.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+  
+</project>
