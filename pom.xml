@@ -5,7 +5,7 @@
 	<groupId>org.jeyzer</groupId>
 	<artifactId>jeyzer-all</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0</version>
+	<version>3.1-SNAPSHOT</version>
 	<name>Jeyzer All</name>
 	
 	<properties>
@@ -52,6 +52,9 @@
 
 		<!-- Guava - Used by Jeyzer analyzer, profile-updater projects -->
 		<com.google.guava.guava.version>16.0.1</com.google.guava.guava.version>
+		
+		<!-- Gson - Used by Jeyzer analyzer, web projects -->
+		<com.google.code.gson.version>2.10.1</com.google.code.gson.version>
 		
 		<!-- Apache POI - Used by Jeyzer analyzer, web projects -->
 		<org.apache.poi.poi-ooxml.version>4.1.2</org.apache.poi.poi-ooxml.version>
