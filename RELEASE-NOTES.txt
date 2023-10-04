@@ -4,6 +4,117 @@
   Jeyzer Release Notes
   ---------------------
 
+  3.1 :	- Jeyzer Analyzer :
+			- Java 21 LTS support (JEYZ-85)
+			  Certified on the Amazon-correto jdk 21
+			  Tested on Oracle OpenJDK 21.0.0_35 and Azul zulu 21.
+			  The Docker distribution of Jeyzer is now running with the Amazon-correto 21 image.
+			- Virtual thread analysis support (JEYZ-81)
+				Virtual threads have been introduced in Java 17 and rolled out in Java 21 LTS. 
+				See JEP-425 for more details and https://docs.oracle.com/en/java/javase/20/core/virtual-threads.html.
+				Jeyzer is supporting this new dimension and therefore permits to :
+				  Display it in a convenient way by grouping the virtual threads having the same stack trace. That way, the unmounted threads are easily displayed.
+				  Generate alerts (monitoring events) on the number of generated virtual threads as well as on on the virtual thread CPU usage.
+				  Compute statistics, histograms and percentage calculations taking into account the the virtual thread related data (function, operation, count..)
+				In Java, the standard exposure of virtual threads is still poor at this stage : 
+				  JCMD is the only tool that captures the virtual thread stacks as part of a file thread dump. But it is missing any other information such as the thread state and lock information.
+				  JFR exposes virtual thread creation and termination events which gives an indication on the number of virtual threads.
+				Virtual threads rely on native carrier threads which are always visible whatever the recording method : it gives an indication on the virtual thread usage.
+				  As well, it also permits to measure the CPU virtual thread usage when the recording method supports it.
+				Recording method features are summarized here :
+					Recording method		VT detection		VT visible		VT count		VT CPU usage
+					  JCMD						yes					yes				yes				no
+					  JFR						yes					no				relative		yes
+					  JZR recorder				yes					no				no				yes
+				Changes in Jeyzer are :
+					The Session details indicates if virtual threads are used and if those are visible (JCMD) or not (JFR, Jeyzer Recorder agent).
+					The thread states "VT carrier" and "VT unmounted" have been introduced :
+						The VT carrier state permits to identify native threads that carry virtual threads.
+						The VT unmounted state permits to identify virtual threads that are currently dismounted.
+					The task sequence sheet supports new headers (see the Charts one) :
+						Native thread counter
+						Virtual thread counter. Requires JCMD or JFR. In the case of JFR, value is relative as it may not reflect the reality if virtual threads were started before the recording
+						Virtual thread created counter. Requires JFR. This reflects the count of jdk.VirtualThreadStart events
+						Virtual thread terminated counter. Requires JFR. This reflects the count of jdk.VirtualThreadEnd events
+						Virtual thread diff. Requires JFR. Counter difference of virtual threads since the last recording snapshot (or recording start time)
+						Virtual thread pinned counter. Requires JFR. This reflects the count of jdk.VirtualThreadPinned events
+						Virtual thread mounted counter. Requires JFR, JCMD or Jeyzer Recorder Agent
+						Virtual thread CPU usage in percentage. Requires JFR or Jeyzer Recorder Agent
+					    Note that the existing Thread Counter header displays now the total number of native and virtual threads.
+					The task sequence sheet supports the new row headers : 
+						Action stack size : includes the count of unmounted virtual threads
+						Thread type : indicates if the thread is native, virtual, virtual unmounted or native carrier
+					The task sequence sheet cells indicates the number of unmounted virtual threads as prefix
+				The JFC configuration provided in standard now contains the capture of creation, pinned and termination events.
+				Source JFR events index : https://sap.github.io/SapMachine/jfrevents/index.html
+			- JCMD thread dump parser added (JEYZ-83)
+				The JCMD thread dump parsing (txt and JSON formats) is now possible.
+				JCMD thread dumps do contain only stacks and thread names. However, thread dumps can contain all the virtual threads (mounted or not).
+				As the thread states are not available, the "Unknown" thread state has been introduced.
+				Note that the JSON parsing seems less reliable than the txt one as very few virtual threads get captured in the first case.
+				PS : the JCMD thread dump file feature has been introduced after Java 17. It is performed with the following command :
+				  > jcmd <pid> Thread.dump_to_file -format=<json|txt> <file dump path>
+				The JCMD thread dump is time stamped using the local time zone.
+			- JZR Report : Thread memory headers are now available in the Task Sequence sheets (JEYZ-84)
+			    3 headers have been added to measure approximatively the thread memory consumption :
+				  Thread memory : sum in Mb of the native and virtual thread memory consumption. Requires JCMD (virtual thread presence).
+				  Native thread memory : it is assumed to be around 2 Mb per thread
+				  Virtual thread memory : it is assumed to be around 1 Mb per thread. Requires JCMD (virtual thread presence).
+				Headers are exposed in the Charts task sequence sheet.
+			- JZR Report : Hiatus and Restart columns are now linked between them in the Task Sequence and Task Group Sequence sheets (JEYZ-75)
+			    User can move forward by clicking on the links whic are located on the top time line.
+				Feature can be disabled in the default_setup.xml : <headers ... hiatus_or_restart_link="true" />
+			- The process card sheet now wrap the values for better display and hides the categories containing only unavailable values (JEYZ-79)
+			- Bug fix JEYZ-74 : Repository URLs were invalid for the dynamic shared loading of profiles
+			- Bug fix JEYZ-76 : Long graph display generates Excel repair warnings when its size exceeds 1100 cells
+			- Bug fix JEYZ-78 : Jar files with "release" or "final" term in their file name were not identified as release versions
+ 
+		- Jeyzer Monitor :
+			- Virtual thread leak monitoring rule added (JEYZ-81)
+			    If unmounted virtual threads are visible for long time, generate the Virtual thread leak suspicion event.
+				The leak here could be real one (especially if never released) or reflects a very long interaction that did unmount it originally.
+			- Virtual thread presence monitoring rule added (JEYZ-81)
+			    If virtual threads are detected, generate the Virtual threads detected event.
+				Initially provided to provide insights on the points to monitor (memory and CPU for virtual threads), it could also be used 
+				to provide recommendations on the Java version that provide a stable implementation of virtual threads.
+			- Global virtual thread limit monitoring rule added (JEYZ-81)
+			    If global number of virtual threads is greater or equal to given value, generate the Global virtual thread limit reached event.
+ 			- Virtual threads CPU consuming monitoring rule added (JEYZ-81) : it permits to detect high CPU usage at virtual thread level.
+			    If virtual thread CPU % is greater or equal to given value, generate the Virtual threads high CPU usage event.
+			- Executor presence monitoring rule added (JEYZ-82)
+				If the given executor is detected across current session, generate the Executor Presence event.
+ 			- New standard monitoring rules :
+			    2 process card rules have been added to detect the virtual thread usage and visibility (JEYZ-81)
+ 
+  		- Jeyzer Analyzer Web server :
+			- Improve the end user notification when zip recording is password protected (JEYZ-80)
+			- Bug fix JEYZ-77 : Disable the enter key shortcut to prevent load warning message when filling the issue description field
+  
+    	- Jeyzer Recorder :
+			- To capture periodically the virtual threads, the jcmd-periodic.bat script is now provided (JEYZ-81)
+			  JDK 21+ is required to execute it.
+  
+  		- Jeyzer Demos :
+			- The Virtual Threads demo has been added to demonstrate the Jeyzer capabilities on the Java virtual threads.
+			    ThousandsVirtualThreads shows the unmounted virtual threads sleeping.
+				ThousandsVirtualThreadsCPU shows the unmounted and running virtual threads sleeping.
+				ClassicalSynchronization shows the synchronization handling in the virtual threads.
+				ReentrantLockSequence shows the recommended locking way in the virtual threads.
+				ReentrantLockDeadlockSequence shows the deadlock case of a virtual thread and a native one.
+				ImageDownloader2 shows the unmounted virtual threads waiting for IO while downloading images from a remote server. 
+				Native side is also provided for time comparison with a 100 threads pool.
+				Virtual side is perfomed twice using the Executors and StructuredTaskScope instanciators. 
+			  It comes up with a new dedicated master profile and a new recording profile.
+			  It requires Java 17+ to be executed : the startup script must be updated with the right JDK/JRE.
+			- The Executor presence monitoring rule is now supported inside the demos (JEYZ-82)
+  
+		- Jeyzer base repository :
+			- Atomikos shared profile added
+			- Cache2k shared profile added
+			- JNA shared profile added
+			- OpenTelemetry shared profile added
+			- Smooks shared profile added
+
   3.0 :	- Jeyzer Analyzer :
 			- Analyzer is now open source, under Mozilla Public License 2.0.
 			- Unix open file descriptors support (JEYZ-68)
@@ -53,6 +164,10 @@
   		- Jeyzer Recorder :
 			- Unix open file descriptors support (JEYZ-68)
 			- Bug fix JEYZ-67 : Jeyzer Recorder logging layer conflicted with the Jboss JUL logging manager
+
+		- Jeyzer Demos :
+			- The Contention type presence monitoring rule is now supported inside the demos (JEYZ-64)
+			- The Shared profile monitoring rule is now supported inside the demos (JEYZ-72)			
 
 		- Jeyzer base repository :
 			- Artemis (AMQ 7) master profile added
