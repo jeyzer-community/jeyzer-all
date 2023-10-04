@@ -5,7 +5,7 @@
 	<groupId>org.jeyzer</groupId>
 	<artifactId>jeyzer-all</artifactId>
 	<packaging>pom</packaging>
-	<version>3.1-SNAPSHOT</version>
+	<version>3.1</version>
 	<name>Jeyzer All</name>
 	
 	<properties>
