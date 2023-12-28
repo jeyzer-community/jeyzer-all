@@ -4,6 +4,88 @@
   Jeyzer Release Notes
   ---------------------
 
+  3.2 :	- Jeyzer Monitor :
+			- Zabbix sender publisher support (JEYZ-86)
+			  Monitoring events can now be published to any Zabbix server. 
+			  It requires to setup a Zabbix trapper on server side and install the Zabbix_sender executable on the client side.
+			  The Jeyzer Monitor will call the Zabbix sender to publish the monitoring events through an input file (key value pairs). 
+			  There must be at least one monitoring event to trigger the sending because Zabbix does not process empty input content.
+			  The input file is templatized with the zabbix_data.vm where the published event info can be fine tuned.
+			  Input files can be archived for debugging purposes in the JEYZER_RECORD_DIRECTORY/monitor/zabbix-inputs
+			  Events are published within a Zabbix "host" scope, which represents the server to monitor in Zabbix.
+			  The Zabbix "host" is defined through the JEYZER_TARGET_NAME environment variable (Jeyzer "host" scope).
+			  The Zabbix publisher configuration is defined in the zabbix_setup.xml file.
+			  The Jeyzer installer permits to activate and configure the Zabbix connection details.
+			  Zabbix connection details can also refer to environment variables. 
+			  Edit then the zabbix_setup.xml to activate it and include it in your master profile.
+			  Those 4 environment variables could be set externally :
+			    ZABBIX_SENDER_PATH : Zabbix_sender executable path
+			    ZABBIX_HOST and ZABBIX_PORT: Zabbix connection details
+			    ZABBIX_SOURCE_IP : the Zabbix client IP address
+			  The JEYZER_MONITOR_ZABBIX_ENABLED environment variable permits to activate the publisher.
+			
+		- Jeyzer Analyzer :
+			- Advanced virtual thread analysis (JEYZ-93)
+			  Advanced virtual thread format is obbtained with the Jeyzer Recorder Agent through the advancedmxvtagent method (JEYZ-92).
+			  Recording method features are now summarized here :
+					Recording method		VT detection		VT visible		VT count		VT CPU usage	Standard MX figures
+					  JZR VT recorder			yes					yes				yes				yes				yes
+					  JCMD						yes					yes				yes				no				no
+					  JFR						yes					no				relative		yes				yes
+					  JZR recorder				yes					no				no				yes				no
+			  The Jeyzer virtual thread agent recording (JEYZ-87) can also be analyzed like any Jcmd recording.
+			  JZR report : headers can reference this format using the Advanced VT Agent category.
+			- Trigger limit added on the contention type, function and operation global percentage rules. (JEYZ-90)
+			  There must be at least 50 active stacks in the recording to activate the rules.
+			- Contention types are now available in the UFO stacks. (JEYZ-89)
+			- Bug fix JEYZ-88 : Repository URLs were invalid for the dynamic shared loading of profiles.
+
+  		- Jeyzer Analyzer Web server :
+			- Bug fix JEYZ-91 : Display translator progress status messages only when applicable
+
+		- Jeyzer Recorder Agent :
+			- Advanced virtual thread capture support (JEYZ-92)
+			  Captures also the process and system MX figures : CPU, memory, garbage collection...
+			  Configurable with the Jeyzer installer.
+			  To activate it manually, set the JEYZER_RECORD_DUMP_METHOD environment variable to advancedmxvtagent 
+			  or edit the agent jeyzer-record.properties configuration file to set the jeyzer-record.JEYZER_RECORD_DUMP_METHOD.
+			  The dump format can be either txt (default) or JSON. The format can be changed in the standard_generation.xml : <advancedmxvtagent format="txt"/> 
+			  Technically, the virtual thread file dump action is called through the VM diagnostic mbean.
+			  Requires Java 21.
+			- Virtual thread capture support (JEYZ-87)
+			  To activate it manually, set the JEYZER_RECORD_DUMP_METHOD environment variable to jcmd 
+			  or edit the agent jeyzer-record.properties configuration file to set the jeyzer-record.JEYZER_RECORD_DUMP_METHOD.
+			  The dump format can be either txt (default) or JSON. The format can be changed in the standard_generation.xml : <jcmd format="txt"/> 
+			  Technically, the jcmd file dump action is called through the VM diagnostic mbean.
+			  The process card gets also generated.
+			  Requires Java 21.
+
+		- Jeyzer Installers :
+			- The Zabbix publisher is now configurable. By default disabled. (JEYZ-86)
+			- The Jeyzer Recorder Agent method (standard or advancedmxvtagent) is now configurable when the Jeyzer Recorder Agent is selected. (JEYZ-92)
+
+  		- Jeyzer Demos :
+			- The Virtual Threads demo now generates a Jeyzer advanced virtual thread recording. (JEYZ-92)
+			- The Virtual Threads demo includes an additional test to cover the method synchronization through virtual threads.
+
+		- Jeyzer base repository :
+			- Apache-HTTP-components shared profile added
+			- AppDynamics shared profile added
+			- Atmosphere shared profile added
+			- Batik shared profile added
+			- Datadog shared profile added
+			- Derby shared profile added
+			- Ehcache shared profile added
+			- Elastic shared profile added
+			- dnsjava shared profile added
+			- Flink shared profile added
+			- Hazelcast shared profile added
+			- Infinispan shared profile added
+			- Jolokia shared profile added
+			- MapDB shared profile added
+			- New Relic shared profile added
+			- XNIO shared profile added
+
   3.1 :	- Jeyzer Analyzer :
 			- Java 21 LTS support (JEYZ-85)
 			  Certified on the Amazon-correto jdk 21
@@ -62,7 +144,7 @@
 				  Virtual thread memory : it is assumed to be around 1 Mb per thread. Requires JCMD (virtual thread presence).
 				Headers are exposed in the Charts task sequence sheet.
 			- JZR Report : Hiatus and Restart columns are now linked between them in the Task Sequence and Task Group Sequence sheets (JEYZ-75)
-			    User can move forward by clicking on the links whic are located on the top time line.
+			    User can move forward by clicking on the links which are located on the top time line.
 				Feature can be disabled in the default_setup.xml : <headers ... hiatus_or_restart_link="true" />
 			- The process card sheet now wrap the values for better display and hides the categories containing only unavailable values (JEYZ-79)
 			- Bug fix JEYZ-74 : Repository URLs were invalid for the dynamic shared loading of profiles
@@ -103,7 +185,7 @@
 				ReentrantLockDeadlockSequence shows the deadlock case of a virtual thread and a native one.
 				ImageDownloader2 shows the unmounted virtual threads waiting for IO while downloading images from a remote server. 
 				Native side is also provided for time comparison with a 100 threads pool.
-				Virtual side is perfomed twice using the Executors and StructuredTaskScope instanciators. 
+				Virtual side is performed twice using the Executors and StructuredTaskScope instanciators. 
 			  It comes up with a new dedicated master profile and a new recording profile.
 			  It requires Java 17+ to be executed : the startup script must be updated with the right JDK/JRE.
 			- The Executor presence monitoring rule is now supported inside the demos (JEYZ-82)
