@@ -4,6 +4,48 @@
   Jeyzer Release Notes
   ---------------------
 
+  3.3 :	- Jeyzer Monitor :
+			- Zabbix publisher enhancements (JEYZ-100)
+			  Host name is now available in the Zabbix input template through the $host_name variable.
+			  Zabbix input files can now be kept for a period of time (instead or kept forever or deleted).
+			  Zabbix input file is now JSON based for immediate integration in Zabbix (previous one has been renamed as zabbix_data_flat.vm).
+			- Monitoring event external id support (JEYZ-94)
+			  Monitoring events can now expose an external id for better display. 
+			  This external id is unique in the scope of the current monitoring session or of the current JZR report generation.
+			  In standard, monitoring events do have a unique id ("Id") composed of multiple key elements (time, rule, context..), not suitable for display.
+			  Use the "ExtId" attribute to reference it in the publisher templates.
+			  JZR report : use the "event_ext_id" to display it in the Sequence Monitoring sheet headers.
+			- Operation and contention type support on the long running task events (JEYZ-95)
+			  The Zabbix zabbix_data.vm template is now exposing those events.
+			- Contention type and high process CPU monitoring rule added (JEYZ-102)
+			    If the process CPU percentage is higher than given value respectively and some contention type is detected, generate event.
+
+		- Jeyzer Analyzer :
+			- Locker name is now available in the UFO stacks. (JEYZ-101)
+			- Bug fix JEYZ-96 : JZR report modules sheet generation failed when handling large module exports.
+			- Bug fix JEYZ-97 : Dynamic monitoring rule resolution was failing when dealing with modules.
+			- Bug fix JEYZ-98 : Dynamic monitoring rule resolution was always executed when dealing with modules and process jars (performance optimization).
+			- Bug fix JEYZ-99 : Reject the multiple JFR files analysis (provided in zip file)
+
+  		- Jeyzer Demos :
+			- The Contention type and high process CPU monitoring rule is now supported inside the demos (JEYZ-102)
+
+		- Jeyzer base repository :
+			- JMC master profile added
+			- Dropwizard shared profile added
+			- Micrometer shared profile added
+			- Night Config shared profile added
+			- Releases shared profile added
+			- RocksDB shared profile added
+			- Solr shared profile added
+			- Spark shared profile added
+			- Strati shared profile added
+			- Truffle shared profile added
+
+		Upgrade instructions : 
+			- Zabbix setup : in the zabbit_setup.xml, replace the keep boolean value with a duration (hours, minutes).
+			  ex : <input_file storage_directory="${JEYZER_RECORD_DIRECTORY}/monitor/zabbix-inputs" keep="48h"/>
+
   3.2 :	- Jeyzer Monitor :
 			- Zabbix sender publisher support (JEYZ-86)
 			  Monitoring events can now be published to any Zabbix server. 
@@ -20,23 +62,23 @@
 			  Edit then the zabbix_setup.xml to activate it and include it in your master profile.
 			  Those 4 environment variables could be set externally :
 			    ZABBIX_SENDER_PATH : Zabbix_sender executable path
-			    ZABBIX_HOST and ZABBIX_PORT: Zabbix connection details
+			    ZABBIX_HOST and ZABBIX_PORT : Zabbix connection details
 			    ZABBIX_SOURCE_IP : the Zabbix client IP address
 			  The JEYZER_MONITOR_ZABBIX_ENABLED environment variable permits to activate the publisher.
+			- Trigger limit added on the contention type, function and operation global percentage rules. (JEYZ-90)
+			  There must be at least 50 active stacks in the recording to activate the rules.
 			
 		- Jeyzer Analyzer :
 			- Advanced virtual thread analysis (JEYZ-93)
-			  Advanced virtual thread format is obbtained with the Jeyzer Recorder Agent through the advancedmxvtagent method (JEYZ-92).
+			  Advanced virtual thread format is obtained with the Jeyzer Recorder Agent through the advancedmxvtagent method (JEYZ-92).
 			  Recording method features are now summarized here :
 					Recording method		VT detection		VT visible		VT count		VT CPU usage	Standard MX figures
 					  JZR VT recorder			yes					yes				yes				yes				yes
 					  JCMD						yes					yes				yes				no				no
 					  JFR						yes					no				relative		yes				yes
-					  JZR recorder				yes					no				no				yes				no
+					  JZR recorder				yes					no				no				yes				yes
 			  The Jeyzer virtual thread agent recording (JEYZ-87) can also be analyzed like any Jcmd recording.
 			  JZR report : headers can reference this format using the Advanced VT Agent category.
-			- Trigger limit added on the contention type, function and operation global percentage rules. (JEYZ-90)
-			  There must be at least 50 active stacks in the recording to activate the rules.
 			- Contention types are now available in the UFO stacks. (JEYZ-89)
 			- Bug fix JEYZ-88 : Repository URLs were invalid for the dynamic shared loading of profiles.
 
